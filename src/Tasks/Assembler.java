@@ -4,4 +4,7 @@ package Tasks;
 
 public class Assembler implements ITask{
 
+public void run() {
+		
+	}
 }

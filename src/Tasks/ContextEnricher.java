@@ -4,4 +4,7 @@ package Tasks;
 
 public class ContextEnricher implements ITask{
 
+public void run() {
+		
+	}
 }

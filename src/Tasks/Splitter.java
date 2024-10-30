@@ -15,7 +15,9 @@ public class Splitter implements ITask{
 	
 	private String xsltFilePath;
 	
-	
+public void run() {
+		
+	}
 	
 	
 }

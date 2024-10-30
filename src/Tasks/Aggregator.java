@@ -4,4 +4,7 @@ package Tasks;
 
 public class Aggregator implements ITask{
 
+	public void run() {
+		
+	}
 }

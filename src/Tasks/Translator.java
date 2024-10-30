@@ -47,5 +47,8 @@ public class Translator implements ITask{
              }
         }
     }
+public void run() {
+		
+	}
 	
 } 
