@@ -6,7 +6,7 @@ package Tasks;
 
 public class TaskFactory {
 
-	public static Task createTask(TaskType taskType) {
+	public static ITask createTask(TaskType taskType) {
         switch (taskType) {
             case AGGREGATOR:
                 return new Aggregator();

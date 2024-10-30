@@ -1,5 +1,5 @@
 package conexion;
 
-public class Puerto {
+public class Slot {
 
 }

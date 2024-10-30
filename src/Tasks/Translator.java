@@ -8,7 +8,7 @@ import resources.XmlTransformer;
 
 //Transforma el cuerpo de un mensaje de un formato a otro
 
-public class Translator implements Task{
+public class Translator implements ITask{
 
 	private BlockingQueue<String> entryPort;
 	private BlockingQueue<String> exitPort;	
