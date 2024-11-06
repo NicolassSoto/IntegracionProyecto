@@ -4,14 +4,14 @@ import java.util.concurrent.BlockingQueue;
 
 import javax.xml.transform.TransformerException;
 
+import org.w3c.dom.Document;
+
 import resources.XmlTransformer;
 
 //Transforma el cuerpo de un mensaje de un formato a otro
 
 public class Translator implements ITask{
 
-	private BlockingQueue<String> entryPort;
-	private BlockingQueue<String> exitPort;	
 	private XmlTransformer transformer;
 	
 	private String xsltFilePath;
@@ -21,8 +21,7 @@ public class Translator implements ITask{
 	
 	public Translator(BlockingQueue<String> entryPort, BlockingQueue<String> exitPort, String xsltFilePath) {
 		super();
-		this.entryPort = entryPort;
-		this.exitPort = exitPort;
+	
 		this.xsltFilePath = xsltFilePath;
 		transformer = new XmlTransformer();
 	}
@@ -32,11 +31,11 @@ public class Translator implements ITask{
         while (true) { 
             try {
                
-                String xmlInput = entryPort.take(); 
+                Document xmlInput ;
                 
-                String transformedOutput = transformer.ApplyXSLT(xmlInput, xsltFilePath);
+               // String transformedOutput = transformer.ApplyXSLT(xmlInput, xsltFilePath);
 
-                exitPort.put(transformedOutput); 
+                
 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt(); 

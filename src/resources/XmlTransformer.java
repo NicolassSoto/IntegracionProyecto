@@ -1,8 +1,17 @@
 package resources;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -15,43 +24,46 @@ public class XmlTransformer {
 			
 		}
 
-	    public static String ApplyXSLT(String xmlInput, String xsltFilePath) throws TransformerException {
-	        // Crear StreamSource a partir del XML de entrada
-	        StreamSource xmlSource = new StreamSource(new StringReader(xmlInput));
-
-	        // Crear StreamSource a partir del fichero XSLT
+	    public static Document ApplyXSLT(Document  xmlInput, String xsltFilePath) throws TransformerException {
 	        StreamSource xsltSource = new StreamSource(new File(xsltFilePath));
 
-	        // Crear un TransformerFactory para construir el Transformer
+	      
 	        TransformerFactory factory = TransformerFactory.newInstance();
 	        Transformer transformer = factory.newTransformer(xsltSource);
 
-	        // Usamos StringWriter para capturar la salida de la transformación
-	        StringWriter writer = new StringWriter();
-	        StreamResult result = new StreamResult(writer);
+	        // Crear un DOMSource a partir del Document de entrada
+	        DOMSource source = new DOMSource(xmlInput);
+
+	        // Crear un DOMResult para almacenar el resultado de la transformación
+	        DOMResult result = new DOMResult();
 
 	        // Aplicar la transformación
-	        transformer.transform(xmlSource, result);
+	        transformer.transform(source, result);
 
-	        // Retornar el resultado como String
-	        return writer.toString();
+	        // Retornar el Document de salida desde DOMResult
+	        return (Document) result.getNode();
 	    }
 	    
 	    
-	    public static List<String> segmentXmlByTag(String xmlInput, String tagName) {
-	        List<String> segments = new ArrayList<>();
+	    public static List<Document> segmentXmlByTag(Document xmlInput, String tagName) throws Exception {
+	        List<Document> segments = new ArrayList<>();
 
-	        // Crear una etiqueta de cierre correspondiente
-	        String closingTag = "</" + tagName.substring(1); // Obtener el nombre de la etiqueta sin "<" y agregar "</"
+	       
+	        NodeList nodes = xmlInput.getElementsByTagName(tagName);
 
-	        // Dividir el string de entrada basado en la etiqueta de cierre
-	        String[] splitSegments = xmlInput.split(closingTag);
+	      
+	        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder builder = factory.newDocumentBuilder();
 
-	        for (String segment : splitSegments) {
-	            // Asegurarse de que el segmento no esté vacío y agregar la etiqueta de cierre
-	            if (!segment.trim().isEmpty()) {
-	                segments.add(segment.trim() + closingTag);
-	            }
+	        for (int i = 0; i < nodes.getLength(); i++) {
+	            Node node = nodes.item(i);
+
+	            // Crear un nuevo documento para cada nodo
+	            Document segmentDoc = builder.newDocument();
+	            Node importedNode = segmentDoc.importNode(node, true);
+	            segmentDoc.appendChild(importedNode);
+
+	            segments.add(segmentDoc);
 	        }
 
 	        return segments;
