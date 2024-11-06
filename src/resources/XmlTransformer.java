@@ -56,10 +56,4 @@ public class XmlTransformer {
 
 	        return segments;
 	    }
-	
-	
-	
-	    
-	
-	
 }

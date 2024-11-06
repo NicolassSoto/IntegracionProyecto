@@ -1,9 +1,5 @@
 package Tasks;
 
-
-
-
-
 public class TaskFactory {
 
 	public static ITask createTask(TaskType taskType) {
