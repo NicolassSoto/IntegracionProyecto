@@ -19,4 +19,6 @@ public class Slot {
     public synchronized void añadirABuffer(Mensaje m) {
         buffer.add(m);
     }
+    
+    public boolean isEmpty() {return buffer.isEmpty();}
 }
