@@ -2,12 +2,10 @@ package Tasks;
 
 public enum TaskType {
     AGGREGATOR,
-    ASSEMBLER,
     CONTEXT_ENRICHER,
     CORRELATION_ID_SETTER,
     CORRELATOR,
     DISTRIBUTOR,
-    FILTER,
     MERGER,
     REPLICATOR,
     SPLITTER,

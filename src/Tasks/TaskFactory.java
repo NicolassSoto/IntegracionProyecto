@@ -6,8 +6,6 @@ public class TaskFactory {
         switch (taskType) {
             case AGGREGATOR:
                 return new Aggregator();
-            case ASSEMBLER:
-                return new Assembler();
             case CONTEXT_ENRICHER:
                 return new ContextEnricher();
             case CORRELATION_ID_SETTER:
@@ -16,8 +14,6 @@ public class TaskFactory {
                 return new Correlator();
             case DISTRIBUTOR:
                 return new Distributor();
-            case FILTER:
-                return new Filter();
             case MERGER:
                 return new Merger();
             case REPLICATOR:
