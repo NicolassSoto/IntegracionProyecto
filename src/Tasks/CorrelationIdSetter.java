@@ -55,9 +55,6 @@ public void run() {
 	
 }
 
-
-
-
 private String generateID() {
 	
 	ID++;

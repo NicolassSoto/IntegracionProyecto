@@ -15,6 +15,15 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
+import org.xml.sax.InputSource;
+import org.xml.sax.InputSource;
+import org.xml.sax.InputSource;
+import org.xml.sax.InputSource;
+import org.xml.sax.InputSource;
+import org.xml.sax.InputSource;
+import org.xml.sax.InputSource;
+import org.xml.sax.InputSource;
+import org.xml.sax.InputSource;
 
 public class XmlTransformer {
 
@@ -44,6 +53,40 @@ public class XmlTransformer {
 	        return writer.toString();
 	    }
 	    
+	 // Método para dividir un mensaje XML en múltiples Documents según la etiqueta de elemento
+	    public Document[] splitXmlMessage(Document contenido, String tagName) throws Exception {
+	        // Convertir el Document a String para poder usar segmentXmlByTag
+	        String xmlInput = documentToString(contenido);
+
+	        // Obtener cada segmento como string usando la etiqueta especificada
+	        List<String> segments = segmentXmlByTag(xmlInput, tagName);
+
+	        // Convertir cada segmento a Document y añadirlo a la lista
+	        List<Document> documentList = new ArrayList<>();
+	        for (String segment : segments) {
+	            Document doc = stringToDocument(segment);
+	            documentList.add(doc);
+	        }
+
+	        // Convertir la lista a un array y retornarlo
+	        return documentList.toArray(new Document[0]);
+	    }
+	    
+	    // Convertir un Document a String
+	    private String documentToString(Document doc) throws TransformerException {
+	        TransformerFactory tf = TransformerFactory.newInstance();
+	        Transformer transformer = tf.newTransformer();
+	        StringWriter writer = new StringWriter();
+	        transformer.transform(new javax.xml.transform.dom.DOMSource(doc), new javax.xml.transform.stream.StreamResult(writer));
+	        return writer.getBuffer().toString();
+	    }
+
+	    // Convertir un String a Document
+	    private Document stringToDocument(String xmlStr) throws Exception {
+	        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder builder = factory.newDocumentBuilder();
+	        return builder.parse(new InputSource(new StringReader(xmlStr)));
+	    }
 	    
 	    public static List<String> segmentXmlByTag(String xmlInput, String tagName) {
 	        List<String> segments = new ArrayList<>();

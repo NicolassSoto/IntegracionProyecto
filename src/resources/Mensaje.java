@@ -36,7 +36,5 @@ public class Mensaje {
 
 		public void setCabecera(String cabecera) {
 			this.cabecera = cabecera;
-		}
-	    
-	    
+		} 
 	}
