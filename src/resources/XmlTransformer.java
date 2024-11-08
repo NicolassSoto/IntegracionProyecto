@@ -73,7 +73,7 @@ public class XmlTransformer {
 	    }
 	    
 	    // Convertir un Document a String
-	    private String documentToString(Document doc) throws TransformerException {
+	    public String documentToString(Document doc) throws TransformerException {
 	        TransformerFactory tf = TransformerFactory.newInstance();
 	        Transformer transformer = tf.newTransformer();
 	        StringWriter writer = new StringWriter();
@@ -82,7 +82,7 @@ public class XmlTransformer {
 	    }
 
 	    // Convertir un String a Document
-	    private Document stringToDocument(String xmlStr) throws Exception {
+	    public Document stringToDocument(String xmlStr) throws Exception {
 	        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder builder = factory.newDocumentBuilder();
 	        return builder.parse(new InputSource(new StringReader(xmlStr)));

@@ -21,7 +21,7 @@ public class TaskFactory {
             case SPLITTER:
                 return new Splitter(null, null, null);
             case TRANSLATOR:
-                return new Translator();
+                return new Translator(null, null, null);
             default:
                 throw new IllegalArgumentException("Unknown task type: " + taskType);
         }

@@ -45,7 +45,7 @@ public class Replicator implements ITask {
 
 	private void enviarMensajesReplicados(List<Mensaje> mensajesReplicados) {
 		for (int i = 0; i < mensajesReplicados.size(); i++) {
-			Slot slotDestino = listaSlots.get(i); // Se asigna cada réplica a un Slot distinto
+			Slot slotDestino = listaSlots.get(i); //Se asigna cada réplica a un Slot distinto
 			slotDestino.añadirABuffer(mensajesReplicados.get(i)); // Se añade mensaje al Slot
 		}
 	}
