@@ -1,9 +1,16 @@
 package Tasks;
 
+import java.util.List;
+
+import conexion.Slot;
+
 //Reconstruye un mensaje divido previamente por una tarea Splitter. 1 Entrada y 1 Salida
 
 public class Aggregator implements ITask{
 
+	private Slot entrada;
+	private Slot salida;
+	
 	public void run() {
 		
 	}

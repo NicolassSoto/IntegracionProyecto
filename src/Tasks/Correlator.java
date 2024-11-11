@@ -14,7 +14,7 @@ public class Correlator implements ITask{
 	
 	private List<Mensaje> A, B;
 	
-public void run() {
+	public void run() {
 		
 		while(!entrada.get(0).isEmpty()) {
 			A.add(entrada.get(0).extraerMensaje());
