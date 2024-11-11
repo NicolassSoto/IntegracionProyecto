@@ -6,9 +6,25 @@ public class Mensaje {
 
 	    private Document contenido;
 	    private String cabecera;
+	    private int idTrozo;
 
 	    
-	    //CONSTRUCTORES
+	    public Mensaje(Document contenido, String cabecera, int idTrozo) {
+			super();
+			this.contenido = contenido;
+			this.cabecera = cabecera;
+			this.idTrozo = idTrozo;
+		}
+
+		public int getnMensaje() {
+			return idTrozo;
+		}
+
+		public void setnMensaje(int nMensaje) {
+			this.idTrozo = nMensaje;
+		}
+
+		//CONSTRUCTORES
 	    public Mensaje() {
 	    }
 	    

@@ -21,6 +21,10 @@ public class Translator implements ITask {
         this.xsltFilePath = xsltFilePath;
         this.transformer = new XmlTransformer();
     }
+    
+    public Translator() {
+    	
+    }
 
     public void procesarMensaje(Mensaje mensajeEntrada, String tipo) throws Exception {
         //Convierte el contenido del mensaje (Document) a String

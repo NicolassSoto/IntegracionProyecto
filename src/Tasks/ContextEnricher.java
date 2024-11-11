@@ -23,6 +23,10 @@ public class ContextEnricher implements ITask {
         this.salida = salida;
         this.transformer = transformer;
     }
+    
+    public ContextEnricher() {
+    	
+    }
 
     @Override
     public void run() {
