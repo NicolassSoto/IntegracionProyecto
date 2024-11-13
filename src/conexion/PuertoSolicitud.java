@@ -30,7 +30,6 @@ public class PuertoSolicitud implements IPuerto{
 	}
 	
 	
-	
 	private boolean checkSQL(Mensaje m) {
 		 String content = m.getContenido().getTextContent().trim();
 
