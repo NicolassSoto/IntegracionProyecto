@@ -9,7 +9,5 @@ public class GeneradorComandas {
 		DatabaseConnection.initializeDatabase();
 		DatabaseOperations.insertExampleData("cafe",2);
 		DatabaseOperations.insertExampleData("cocacola",7);
-
 	}
-
 }

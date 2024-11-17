@@ -25,7 +25,6 @@ public class Mensaje {
         this.idTrozo = nMensaje;
     }
 
-    //CONSTRUCTORES
     public Mensaje() {
     }
 

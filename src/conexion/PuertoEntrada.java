@@ -22,7 +22,7 @@ public class PuertoEntrada {
             listaMensajes.add(mensaje);
             System.out.println("Mensaje añadido a la lista.");
         } else {
-            System.err.println("Mensaje no válido.");
+            System.err.println("Error al recibir mensaje.");
         }
     }
 

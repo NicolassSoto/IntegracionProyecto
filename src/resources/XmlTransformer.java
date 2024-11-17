@@ -16,14 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
 import org.xml.sax.InputSource;
-import org.xml.sax.InputSource;
-import org.xml.sax.InputSource;
-import org.xml.sax.InputSource;
-import org.xml.sax.InputSource;
-import org.xml.sax.InputSource;
-import org.xml.sax.InputSource;
-import org.xml.sax.InputSource;
-import org.xml.sax.InputSource;
 
 public class XmlTransformer {
 
