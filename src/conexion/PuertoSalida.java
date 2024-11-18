@@ -25,9 +25,4 @@ public class PuertoSalida {
             return mensaje;
     }
 
-    private boolean check(Mensaje m) {
-     
-        //No sé exactamente cómo lo comprobaríamos aquí
-        return true;
-    }
 }

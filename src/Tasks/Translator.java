@@ -45,9 +45,8 @@ public class Translator extends ITask {
         }
     }
 
-    //Método para convertir un String a Document
     private Document stringToDocument(String xmlStr) throws Exception {
-        return transformer.stringToDocument(xmlStr); // Usamos el método de XmlTransformer
+        return transformer.stringToDocument(xmlStr); 
     }
 
     //Método para convertir Document a String

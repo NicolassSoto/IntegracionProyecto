@@ -17,19 +17,16 @@ public class PuertoEntrada {
     }
 
     public void recibirMensaje(Document mensajeXml) {
-        if (checkMensaje(mensajeXml)) {
-            Mensaje mensaje = new Mensaje(mensajeXml, "Cabecera", 0);
-            listaMensajes.add(mensaje);
-            System.out.println("Mensaje añadido a la lista.");
-        } else {
-            System.err.println("Error al recibir mensaje.");
-        }
+
+        Mensaje mensaje = new Mensaje(mensajeXml, "Cabecera", 0);
+        listaMensajes.add(mensaje);
+        System.out.println("Mensaje añadido a la lista.");
     }
 
     public Mensaje enviarMensaje() {
         if (!listaMensajes.isEmpty()) {
             Mensaje mensaje = listaMensajes.get(0);
-            listaMensajes.remove(0); 
+            listaMensajes.remove(0);
             System.out.println("Mensaje enviado correctamente.");
             return mensaje;
         } else {
@@ -38,13 +35,4 @@ public class PuertoEntrada {
         }
     }
 
-    private boolean checkMensaje(Document mensajeXml) {
-        try {
-            String contenido = transformer.documentToString(mensajeXml);
-            return contenido.contains("<comanda>") && contenido.contains("</comanda>");
-        } catch (Exception e) {
-            System.err.println("Error al validar el mensaje.");
-            return false;
-        }
-    }
 }
