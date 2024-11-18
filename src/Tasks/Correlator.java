@@ -7,7 +7,7 @@ import conexion.Slot;
 import resources.Mensaje;
 
 //Correlaciona los mensajes de sus dos entradas (Normalmente usando el id) Y los saca al mismo tiempo por sus dos salidas.
-public class Correlator implements ITask{
+public class Correlator extends ITask{
 
 	private List<Slot> entrada;
 	private List<Slot> salida;

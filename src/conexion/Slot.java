@@ -10,13 +10,12 @@ public class Slot {
 	
 	public Mensaje extraerMensaje() {
         if (buffer.isEmpty()) {
-            return null;  // Si el buffer está vacío, no hay mensajes para extraer
+            return null; 
         }
-        return (Mensaje) buffer.remove(0);  // Extraer el primer mensaje (FIFO)
+        return (Mensaje) buffer.remove(0);  
     }
 
-    // Método para añadir un mensaje al buffer
-    public synchronized void añadirABuffer(Mensaje m) {
+    public void añadirABuffer(Mensaje m) {
         buffer.add(m);
     }
     

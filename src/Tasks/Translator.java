@@ -8,7 +8,7 @@ import conexion.Slot;
 import resources.Mensaje;
 import resources.XmlTransformer;
 
-public class Translator implements ITask {
+public class Translator extends ITask {
 
     private List<Slot> entrada;
     private List<Slot> salida;

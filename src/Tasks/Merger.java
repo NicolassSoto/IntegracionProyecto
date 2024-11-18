@@ -6,7 +6,7 @@ import conexion.Slot;
 import resources.Mensaje;
 
 //Encamina los mensajes de todas sus entradas hacia una única salida
-public class Merger implements ITask {
+public class Merger extends ITask {
 
 	private List<Slot> entrada;
 	private Slot salida;

@@ -9,7 +9,7 @@ import conexion.Slot;
 import resources.Mensaje;
 import resources.XmlTransformer;
 
-public class ContextEnricher implements ITask {
+public class ContextEnricher extends ITask {
 
     private Slot mensaje;    // Mensaje de entrada en XML
     private Slot contexto;   // Información de contexto en XML

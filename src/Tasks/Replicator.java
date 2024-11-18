@@ -5,7 +5,7 @@ import resources.Mensaje;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Replicator implements ITask {
+public class Replicator extends ITask {
 
 	@Override
 	public void run() {

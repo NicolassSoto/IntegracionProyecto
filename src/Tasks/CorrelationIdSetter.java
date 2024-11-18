@@ -7,7 +7,7 @@ import resources.Mensaje;
 import resources.XmlTransformer;
 
 //Almacena en la cabecera un ID de correlacion
-public class CorrelationIdSetter implements ITask {
+public class CorrelationIdSetter extends ITask {
 
 	private Slot entrada;
 	private Slot salida;

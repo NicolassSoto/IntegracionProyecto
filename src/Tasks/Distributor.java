@@ -12,7 +12,7 @@ import conexion.Slot;
 import resources.Mensaje;
 
 //Distribuye los mensajes de una entrada hacia varias salidas siguiendo un criterio.
-public class Distributor implements ITask{
+public class Distributor extends ITask{
 
 	private List<Slot> entrada;
 	private List<Slot> salida;

@@ -3,7 +3,6 @@ package conexion;
 import resources.Mensaje;
 import resources.XmlTransformer;
 
-import java.util.ArrayList;
 
 public class PuertoSalida {
 
