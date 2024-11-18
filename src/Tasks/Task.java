@@ -9,7 +9,7 @@ import resources.XmlTransformer;
 
 public abstract class Task {
 
-    private XmlTransformer procesador = new XmlTransformer();
+    private XmlTransformer procesador;
     
     private ArrayList<Slot> input, output;
 
@@ -19,10 +19,15 @@ public abstract class Task {
     public Task(ArrayList<Slot> input, ArrayList<Slot> output) {
         this.input = new ArrayList<>();
         this.output = new ArrayList<>();
+        this.procesador = new XmlTransformer();
         this.input = input;
         this.output = output;
     }
 
+    public XmlTransformer getXmlTransformer(){
+        return procesador;
+    }
+    
     public ArrayList<Slot> getInput() {
         return input;
     }
