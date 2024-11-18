@@ -1,29 +1,33 @@
 package resources;
 
 import javax.xml.parsers.DocumentBuilder;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+
 
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import org.xml.sax.InputSource;
-import org.xml.sax.InputSource;
-import org.xml.sax.InputSource;
-import org.xml.sax.InputSource;
-import org.xml.sax.InputSource;
-import org.xml.sax.InputSource;
-import org.xml.sax.InputSource;
-import org.xml.sax.InputSource;
-import org.xml.sax.InputSource;
+
 
 public class XmlTransformer {
 
@@ -31,46 +35,67 @@ public class XmlTransformer {
 
 	}
 
-	public static String ApplyXSLT(String xmlInput, String xsltFilePath) throws TransformerException {
-		// Crear StreamSource a partir del XML de entrada
-		StreamSource xmlSource = new StreamSource(new StringReader(xmlInput));
+	public Document aplicarXslt(Document inputDoc, String xsltFilePath) throws Exception {
+      
+        TransformerFactory factory = TransformerFactory.newInstance();
 
-		// Crear StreamSource a partir del fichero XSLT
-		StreamSource xsltSource = new StreamSource(new File(xsltFilePath));
+       
+        StreamSource xsltStream = new StreamSource(new File(xsltFilePath));
+        Transformer transformer = factory.newTransformer(xsltStream);
 
-		// Crear un TransformerFactory para construir el Transformer
-		TransformerFactory factory = TransformerFactory.newInstance();
-		Transformer transformer = factory.newTransformer(xsltSource);
+       
+        DOMSource source = new DOMSource(inputDoc);
 
-		// Usamos StringWriter para capturar la salida de la transformación
-		StringWriter writer = new StringWriter();
-		StreamResult result = new StreamResult(writer);
+       
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-		// Aplicar la transformación
-		transformer.transform(xmlSource, result);
+       
+        StreamResult result = new StreamResult(byteArrayOutputStream);
 
-		// Retornar el resultado como String
-		return writer.toString();
-	}
+        transformer.transform(source, result);
+
+       
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+     
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+        Document outputDoc = docBuilder.parse(byteArrayInputStream);
+
+       
+        return outputDoc;
+    }
 
 	// Método para dividir un mensaje XML en múltiples Documents según la etiqueta
 	// de elemento
-	public Document[] splitXmlMessage(Document contenido, String tagName) throws Exception {
-		// Convertir el Document a String para poder usar segmentXmlByTag
-		String xmlInput = documentToString(contenido);
+	public List<Document> splitXmlMessage(Document contenido, String tagName) throws ParserConfigurationException{
+		
+		List<Document> splitDocuments = new ArrayList<>();
 
-		// Obtener cada segmento como string usando la etiqueta especificada
-		List<String> segments = segmentXmlByTag(xmlInput, tagName);
+       
+        NodeList drinks = contenido.getElementsByTagName(tagName);
 
-		// Convertir cada segmento a Document y añadirlo a la lista
-		List<Document> documentList = new ArrayList<>();
-		for (String segment : segments) {
-			Document doc = stringToDocument(segment);
-			documentList.add(doc);
-		}
+       
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
 
-		// Convertir la lista a un array y retornarlo
-		return documentList.toArray(new Document[0]);
+        for (int i = 0; i < drinks.getLength(); i++) {
+            Node drinkNode = drinks.item(i);
+
+           
+            Document newDoc = builder.newDocument();
+
+           
+            Node importedDrink = newDoc.importNode(drinkNode, true);
+            newDoc.appendChild(importedDrink);
+
+            
+            splitDocuments.add(newDoc);
+        }
+
+        return splitDocuments;
+		
+		
 	}
 
 	// Convertir un Document a String
@@ -82,6 +107,38 @@ public class XmlTransformer {
 				new javax.xml.transform.stream.StreamResult(writer));
 		return writer.getBuffer().toString();
 	}
+	
+	
+	public static Mensaje combinarConjunto(List<Mensaje> conjunto) throws Exception {
+      
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        Document nuevoDocumento = docBuilder.newDocument();
+
+     
+        Element rootElement = nuevoDocumento.createElement("root");
+        nuevoDocumento.appendChild(rootElement);
+
+        
+        Element orderIdElement = nuevoDocumento.createElement("order_id");
+        orderIdElement.appendChild(nuevoDocumento.createTextNode(conjunto.get(0).getIdConjunto()));
+        rootElement.appendChild(orderIdElement);
+
+       
+        for (Mensaje mensaje : conjunto) {
+            Document contenido = mensaje.getContenido(); 
+            NodeList drinkList = contenido.getElementsByTagName("drink");
+
+            Node drinkNode = drinkList.item(0); 
+                
+            Node importedNode = nuevoDocumento.importNode(drinkNode, true);
+            rootElement.appendChild(importedNode); // Añadir el nodo <drink> al <root>
+            
+        }
+        Mensaje m = new Mensaje();
+        m.setContenido(nuevoDocumento);
+        return m;
+    }
 
 	// Convertir un String a Document
 	public Document stringToDocument(String xmlStr) throws Exception {
@@ -158,20 +215,28 @@ public class XmlTransformer {
 	}
 
 	// Método para enriquecer el mensaje base con el contexto
-	public Document enriquecerMensajeConContexto(Document mensajeDoc, Document contextoDoc) {
-		// Importar los nodos del contexto y añadirlos al mensaje
-		Element mensajeRoot = mensajeDoc.getDocumentElement();
-		Element contextoRoot = contextoDoc.getDocumentElement();
+	public Document enriquecerMensajeConContexto(Document mensajeDoc, Document contextoDoc) throws ParserConfigurationException {
+	    
+		 // 
+        NodeList contextoList = contextoDoc.getElementsByTagName("stock");
+        
+        if (contextoList.getLength() > 0) {
+            Node stockNode = contextoList.item(0);  // Obtener el primer nodo <stock>
+            String stockValue = stockNode.getTextContent();  // Obtener el contenido de texto (valor de stock)
+            
+            // Crear un nuevo elemento <stock> con el mismo valor de texto del contexto
+            Element stockElement = mensajeDoc.createElement("stock");
+            stockElement.appendChild(mensajeDoc.createTextNode(stockValue));  // Añadir el valor de stock como texto
+            
+            // Buscar el elemento <drink> en mensajeDoc y añadirle el nuevo elemento <stock>
+            NodeList drinkList = mensajeDoc.getElementsByTagName("drink");
+            if (drinkList.getLength() > 0) {
+                Element drinkElement = (Element) drinkList.item(0);  // Obtener el primer (y único) <drink>
+                drinkElement.appendChild(stockElement);  // Añadir el <stock> como hijo del <drink>
+            }
+        }
 
-		// Clonar y anexar cada nodo del contexto en el mensaje bajo un nodo <contexto>
-		Element contextoElemento = mensajeDoc.createElement("contexto");
-		mensajeRoot.appendChild(contextoElemento);
-
-		// Copiar los nodos de contexto al nuevo elemento <contexto>
-		for (int i = 0; i < contextoRoot.getChildNodes().getLength(); i++) {
-			contextoElemento.appendChild(mensajeDoc.importNode(contextoRoot.getChildNodes().item(i), true));
-		}
-
-		return mensajeDoc;
+        // Retornar el documento enriquecido
+        return mensajeDoc;
 	}
 }

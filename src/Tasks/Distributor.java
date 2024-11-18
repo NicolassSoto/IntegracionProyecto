@@ -12,25 +12,18 @@ import conexion.Slot;
 import resources.Mensaje;
 
 //Distribuye los mensajes de una entrada hacia varias salidas siguiendo un criterio.
-public class Distributor implements ITask{
+public class Distributor extends Task{
 
-	private List<Slot> entrada;
+	private Slot entrada;
 	private List<Slot> salida;
 	
 	public Distributor() {}
 	
-	public Distributor(List<Slot> entrada, List<Slot> salida) {
+	public Distributor(Slot entrada, List<Slot> salida) {
 		this.entrada = entrada;
 		this.salida = salida;	
 	}
 	
-	public void setEntrada(List<Slot> entrada) {
-		this.entrada = entrada;
-	}
-	
-	public void setSalida(List<Slot> salida) {
-		this.salida = salida;
-	}
 	
 	
 public void run() {
@@ -46,24 +39,22 @@ public void run() {
 	
 	
 	
-	//Entramos en el bucle para comprobar cada mensaje y enviarlo a una salida concreta segun el tipo
-	while(!entrada.get(0).isEmpty()) {
-		
-		Mensaje m = entrada.get(0).extraerMensaje();
-		
+	List<Mensaje> mensajes = entrada.getListaMensajes();
+	
+	for(Mensaje m : mensajes) {
+			
 		String tipo = (String) expr.evaluate(m.getContenido(), XPathConstants.STRING);
-		
-		
+
 		
 		switch(tipo) {
 		
-		case "tipo1": 
-			salida.get(0).añadirABuffer(m);
+		case "cold": 
+			salida.get(0).setMensaje(m);
 			break;
 			
 			
-		case "tipo2":
-			salida.get(1).añadirABuffer(m);
+		case "hot":
+			salida.get(1).setMensaje(m);
 			break;
 		default:
 		

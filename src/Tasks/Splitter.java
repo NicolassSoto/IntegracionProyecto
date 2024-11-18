@@ -1,56 +1,75 @@
 package Tasks;
 
+import java.util.List;
+
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+
+import conexion.Slot;
 import resources.Mensaje;
 import resources.XmlTransformer;
 
-public class Splitter implements ITask {
+public class Splitter extends Task {
 
     private XmlTransformer transformer;
-    private String xsltFilePath;
-    private Mensaje mensajeEntrada; 
+    Slot entrada;
+    Slot salida;
 
-    public Splitter(XmlTransformer transformer, String xsltFilePath, Mensaje mensajeEntrada) {
-        this.transformer = transformer;
-        this.xsltFilePath = xsltFilePath;
-        this.mensajeEntrada = mensajeEntrada;
+
+
+    public Splitter(Slot entrada, Slot salida) {
+    	
+    	this.entrada = entrada;
+    	this.salida = salida;
+    
+    	this.transformer = new XmlTransformer();
+       
     }
     
     public Splitter() {
     	
     }
 
-    public Mensaje[] procesarMensaje(Mensaje mensajeEntrada) throws Exception {
-        //Usa el transformer para dividir el contenido en varios Document individuales
-        Document[] mensajesDivididos = transformer.splitXmlMessage(mensajeEntrada.getContenido(), xsltFilePath);
+   public void run() {
+	   
+	   
+	   List<Mensaje> mensajes = entrada.getListaMensajes();
+	   
+	   for(Mensaje mensaje : mensajes) {
+	  
+		  
+		   NodeList orderIdList = mensaje.getContenido().getElementsByTagName("order_id");
+		   
+		   String idConjunto = orderIdList.item(0).getTextContent();
 
-        Mensaje[] mensajesSalida = new Mensaje[mensajesDivididos.length];
-        for (int i = 0; i < mensajesDivididos.length; i++) {
-       
-            mensajesSalida[i] = new Mensaje(mensajesDivididos[i], mensajeEntrada.getCabecera(), i);
-        }
-        
-        return mensajesSalida;
-    }
+		   try {
+			List<Document> drinks = transformer.splitXmlMessage(mensaje.getContenido(), "drink");
+			
+			
+			for(Document d : drinks) {
+				Mensaje m = new Mensaje();
+				m.setContenido(d);
+				m.setIdConjunto(idConjunto);
+				m.setnMensajesEnConjunto(drinks.size());
+				
+				salida.setMensaje(m);
+			}
+			
+			
 
-    @Override
-    public void run() {
-        try {
-            if (mensajeEntrada == null) {
-                throw new IllegalArgumentException();
-            }
-
-            Mensaje[] mensajesSalida = procesarMensaje(mensajeEntrada);
-            
-            for (Mensaje mensaje : mensajesSalida) {
-                System.out.println("Cabecera: " + mensaje.getCabecera());
-                System.out.println("Trozo numero: " + mensaje.getnMensaje()); 
-                System.out.println("Contenido: " + mensaje.getContenido());
-            }
-        } catch (Exception e) {
-            System.err.println("Error en la tarea Splitter: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
+			
+		} catch (ParserConfigurationException e) {
+		}
+		   
+		   
+		   
+		   
+		   
+	   }
+	   
+	   
+	   
+	   
+   }
 }

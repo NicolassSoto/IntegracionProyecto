@@ -18,33 +18,25 @@ public class CorrelationIdSetter extends Task {
 	public CorrelationIdSetter() {
 	}
 
-	public CorrelationIdSetter(List<Slot> entrada, List<Slot> salida) {
+	public CorrelationIdSetter(Slot entrada, Slot salida) {
 
-		this.entrada = entrada.get(0);
-		this.salida = salida.get(0);
+		this.entrada = entrada;
+		this.salida = salida;
 
 	}
 
 	// SETTERS
 
-	public void setEntrada(List<Slot> entrada) {
-		this.entrada = entrada.get(0);
-	}
-
-	public void setSalida(List<Slot> salida) {
-		this.salida = salida.get(0);
-	}
 
 	public void run() {
 
-		Mensaje m;
+		List<Mensaje> mensajes = entrada.getListaMensajes();
 
-		while (!entrada.isEmpty()) {
-			m = entrada.desencolar();
+		for(Mensaje m : mensajes) {
 			m.setIdMensaje(generateID());
 			salida.setMensaje(m);
 		}
-
+		
 	}
 
 	private String generateID() {

@@ -8,6 +8,10 @@ public class Slot {
 
     private ArrayList<Mensaje> listaMensajes = new ArrayList<>();
 
+    public Slot() {
+    	
+    }
+    
     public void setMensaje(Mensaje doc) {
         listaMensajes.add(doc);
     }
