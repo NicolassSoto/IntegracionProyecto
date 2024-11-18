@@ -1,7 +1,6 @@
 package conexion;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import resources.Mensaje;
 
@@ -19,5 +18,9 @@ public class Slot {
     
     public Mensaje desencolar(){
         return listaMensajes.remove(0);
+    }
+    
+    public boolean isEmpty(){
+        return listaMensajes.isEmpty();
     }
 }
