@@ -4,62 +4,23 @@ import resources.Mensaje;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.JSQLParserException;
 
-public class PuertoSolicitud implements IPuerto{
+public class PuertoSolicitud extends Puerto {
 
-	public Mensaje recibirMensaje() {
-		
-			Mensaje m = slot.get(0).extraerMensaje();
-			
-			boolean isOk = checkSQL(m);
-			
-			if(isOk) {
-				return m;			
-			}else {
-				return null;
-			}
+    Slot salida;
 
-	}
-	
-	public void enviarMensaje(Mensaje m) {
-		if(checkSalida(m)) {
-		slot.get(1).añadirABuffer(m);
-		}else {
-			System.out.println("CONECTOR: EL FORMATO DE SALIDA NO COINCIDE");
-		}
-		
-	}
-	
-	
-	
-	private boolean checkSQL(Mensaje m) {
-		 String content = m.getContenido().getTextContent().trim();
+    public PuertoSolicitud(Slot slot, Slot salida) {
+        super(slot);
+        this.salida = salida;
+    }
 
-	        try {
-	          
-	            CCJSqlParserUtil.parse(content);
-	            
-	            return true; 
-	        } catch (JSQLParserException e) {
-	        	System.out.println("CONECTOR: EL FORMATO DE ENTRADA NO COINCIDE");
-	            return false; 
-	        }
-		
-	}
-	
-	private boolean checkSalida(Mensaje m) {
-		
-		String content = m.getContenido().getTextContent().trim();
-		
-		//Para stock
-		try {
-	        Double.parseDouble(content); 
-	        return true;
-	    } catch (NumberFormatException e) {
-	        return false;
-	    }
-		
-		
-	}
-	
-	
+    @Override
+    public Mensaje leerMensaje() {
+        return getSlot().desencolar();
+    }
+
+    @Override
+    public void escribirMensaje(Mensaje m) {
+        salida.setMensaje(m);
+    }
+
 }

@@ -5,25 +5,23 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 
 import conexion.Slot;
+import java.util.ArrayList;
 import resources.Mensaje;
 import resources.XmlTransformer;
 
-public class Translator implements ITask {
+public class Translator extends Task {
 
-    private List<Slot> entrada;
-    private List<Slot> salida;
     private XmlTransformer transformer;
     private String xsltFilePath;
 
-    public Translator(List<Slot> entrada, List<Slot> salida, String xsltFilePath) {
-        this.entrada = entrada;
-        this.salida = salida;
+    public Translator() {
+
+    }
+
+    public Translator(ArrayList<Slot> entrada, ArrayList<Slot> salida, String xsltFilePath) {
+        super(entrada, salida);
         this.xsltFilePath = xsltFilePath;
         this.transformer = new XmlTransformer();
-    }
-    
-    public Translator() {
-    	
     }
 
     public void procesarMensaje(Mensaje mensajeEntrada, String tipo) throws Exception {
