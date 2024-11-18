@@ -30,7 +30,7 @@ public class PuertoEntrada {
         if (!listaMensajes.isEmpty()) {
             Mensaje mensaje = listaMensajes.get(0);
             listaMensajes.remove(0); 
-            System.out.println("Mensaje enviado.");
+            System.out.println("Mensaje enviado correctamente.");
             return mensaje;
         } else {
             System.out.println("No hay mensajes en la lista para enviar.");
@@ -43,7 +43,7 @@ public class PuertoEntrada {
             String contenido = transformer.documentToString(mensajeXml);
             return contenido.contains("<comanda>") && contenido.contains("</comanda>");
         } catch (Exception e) {
-            System.err.println("Error al validar el mensaje: " + e.getMessage());
+            System.err.println("Error al validar el mensaje.");
             return false;
         }
     }
