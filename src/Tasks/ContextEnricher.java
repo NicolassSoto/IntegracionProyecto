@@ -9,7 +9,7 @@ import conexion.Slot;
 import resources.Mensaje;
 import resources.XmlTransformer;
 
-public class ContextEnricher implements ITask {
+public class ContextEnricher extends Task {
 
     private Slot mensaje;    // Mensaje de entrada en XML
     private Slot contexto;   // Información de contexto en XML
@@ -49,8 +49,8 @@ public class ContextEnricher implements ITask {
             Document mensajeEnriquecido = transformer.enriquecerMensajeConContexto(mensaje.extraerMensaje().getContenido(), contexto.extraerMensaje().getContenido());
 
             // Convertir el documento enriquecido a String y enviarlo a la salida
-            Mensaje mensajeEnriquecidoStr = new Mensaje(mensaje.extraerMensaje().getCabecera(), mensajeEnriquecido);
-            salida.añadirABuffer(mensajeEnriquecidoStr);
+            Mensaje mensajeEnriquecidoStr = new Mensaje(mensaje.desencolar().getCabecera(), mensajeEnriquecido);
+            salida.setMensaje(mensajeEnriquecidoStr);
 
 
         } catch (Exception e) {

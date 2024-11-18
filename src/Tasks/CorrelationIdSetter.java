@@ -7,7 +7,7 @@ import resources.Mensaje;
 import resources.XmlTransformer;
 
 //Almacena en la cabecera un ID de correlacion
-public class CorrelationIdSetter implements ITask {
+public class CorrelationIdSetter extends Task {
 
 	private Slot entrada;
 	private Slot salida;
@@ -40,9 +40,9 @@ public class CorrelationIdSetter implements ITask {
 		Mensaje m;
 
 		while (!entrada.isEmpty()) {
-			m = entrada.extraerMensaje();
-			m.setCabecera(generateID());
-			salida.añadirABuffer(m);
+			m = entrada.desencolar();
+			m.setIdMensaje(generateID());
+			salida.setMensaje(m);
 		}
 
 	}
