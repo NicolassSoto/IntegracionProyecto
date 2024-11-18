@@ -1,5 +1,15 @@
 package conexion;
 
-public class PuertoEntrada {
+import resources.Mensaje;
 
+public class PuertoEntrada extends Puerto{
+
+    public PuertoEntrada(Slot s) {
+        super(s);
+    }
+
+    @Override
+    public Mensaje leerMensaje() {
+        return getSlot().desencolar();
+    }
 }

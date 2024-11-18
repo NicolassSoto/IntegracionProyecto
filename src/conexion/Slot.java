@@ -1,24 +1,23 @@
 package conexion;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import resources.Mensaje;
 
 public class Slot {
-	
-	private List buffer;
-	
-	public Mensaje extraerMensaje() {
-        if (buffer.isEmpty()) {
-            return null;  // Si el buffer está vacío, no hay mensajes para extraer
-        }
-        return (Mensaje) buffer.remove(0);  // Extraer el primer mensaje (FIFO)
+
+    private ArrayList<Mensaje> listaMensajes = new ArrayList<>();
+
+    public void setMensaje(Mensaje doc) {
+        listaMensajes.add(doc);
     }
 
-    // Método para añadir un mensaje al buffer
-    public synchronized void añadirABuffer(Mensaje m) {
-        buffer.add(m);
+    public ArrayList<Mensaje> getListaMensajes() {
+        return listaMensajes;
     }
     
-    public boolean isEmpty() {return buffer.isEmpty();}
+    public Mensaje desencolar(){
+        return listaMensajes.remove(0);
+    }
 }
