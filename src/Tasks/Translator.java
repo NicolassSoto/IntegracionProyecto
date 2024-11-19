@@ -15,28 +15,23 @@ public class Translator extends Task {
     private String xsltFilePath;
 
     private Slot entrada, salida;
-    
-   
-   
-
-   
 
     public Translator(String xsltFilePath, Slot entrada, Slot salida) {
-		super();
-		this.xsltFilePath = xsltFilePath;
-		this.entrada = entrada;
-		this.salida = salida;
-		transformer = new XmlTransformer();
-	}
+        super();
+        this.xsltFilePath = xsltFilePath;
+        this.entrada = entrada;
+        this.salida = salida;
+        transformer = new XmlTransformer();
+    }
 
-	@Override
+    @Override
     public void run() throws IllegalArgumentException, ParserConfigurationException, Exception {
-      
-		List<Mensaje> mensajes = entrada.getListaMensajes();
-		
+
+        List<Mensaje> mensajes = entrada.getListaMensajes();
+
         for (Mensaje m : mensajes) {
-           
-        	Document resultado = transformer.aplicarXslt(m.getContenido(), xsltFilePath);
+
+            Document resultado = transformer.aplicarXslt(m.getContenido(), xsltFilePath);
             m.setContenido(resultado);
             salida.setMensaje(m);
         }

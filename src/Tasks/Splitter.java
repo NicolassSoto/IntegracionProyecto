@@ -16,60 +16,45 @@ public class Splitter extends Task {
     Slot entrada;
     Slot salida;
 
-
-
     public Splitter(Slot entrada, Slot salida) {
-    	
-    	this.entrada = entrada;
-    	this.salida = salida;
-    
-    	this.transformer = new XmlTransformer();
-       
+
+        this.entrada = entrada;
+        this.salida = salida;
+
+        this.transformer = new XmlTransformer();
+
     }
-    
+
     public Splitter() {
-    	
+
     }
 
-   public void run() {
-	   
-	   
-	   List<Mensaje> mensajes = entrada.getListaMensajes();
-	   
-	   for(Mensaje mensaje : mensajes) {
-	  
-		  
-		   NodeList orderIdList = mensaje.getContenido().getElementsByTagName("order_id");
-		   
-		   String idConjunto = orderIdList.item(0).getTextContent();
+    public void run() {
 
-		   try {
-			List<Document> drinks = transformer.splitXmlMessage(mensaje.getContenido(), "drink");
-			
-			
-			for(Document d : drinks) {
-				Mensaje m = new Mensaje();
-				m.setContenido(d);
-				m.setIdConjunto(idConjunto);
-				m.setnMensajesEnConjunto(drinks.size());
-				
-				salida.setMensaje(m);
-			}
-			
-			
+        List<Mensaje> mensajes = entrada.getListaMensajes();
 
-			
-		} catch (ParserConfigurationException e) {
-		}
-		   
-		   
-		   
-		   
-		   
-	   }
-	   
-	   
-	   
-	   
-   }
+        for (Mensaje mensaje : mensajes) {
+
+            NodeList orderIdList = mensaje.getContenido().getElementsByTagName("order_id");
+
+            String idConjunto = orderIdList.item(0).getTextContent();
+
+            try {
+                List<Document> drinks = transformer.splitXmlMessage(mensaje.getContenido(), "drink");
+
+                for (Document d : drinks) {
+                    Mensaje m = new Mensaje();
+                    m.setContenido(d);
+                    m.setIdConjunto(idConjunto);
+                    m.setnMensajesEnConjunto(drinks.size());
+
+                    salida.setMensaje(m);
+                }
+
+            } catch (ParserConfigurationException e) {
+            }
+
+        }
+
+    }
 }
