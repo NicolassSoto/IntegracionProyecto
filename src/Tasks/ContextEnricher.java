@@ -2,8 +2,6 @@ package Tasks;
 
 //Añade contenido al cuerpo del mensaje de entrada a partir de la información de contexto ofrecida en la entrada “contexto”. 2 entradas y 1 salida
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import conexion.Slot;
 import resources.Mensaje;
 import resources.XmlTransformer;

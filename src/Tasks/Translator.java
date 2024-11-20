@@ -3,7 +3,6 @@ package Tasks;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import conexion.Slot;
-import java.util.ArrayList;
 import java.util.List;
 
 import resources.Mensaje;

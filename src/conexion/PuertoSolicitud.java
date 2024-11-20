@@ -1,8 +1,6 @@
 package conexion;
 
 import resources.Mensaje;
-import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.JSQLParserException;
 import org.w3c.dom.Document;
 
 public class PuertoSolicitud extends Puerto {
@@ -26,5 +24,4 @@ public class PuertoSolicitud extends Puerto {
         m.setContenido(body);
         salida.setMensaje(m);
     }
-
 }

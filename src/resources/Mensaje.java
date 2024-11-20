@@ -55,5 +55,4 @@ public class Mensaje {
     public void setContenido(Document contenido) {
         this.contenido = contenido;
     }
-
 }

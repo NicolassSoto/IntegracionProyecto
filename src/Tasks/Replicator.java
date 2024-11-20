@@ -2,7 +2,6 @@ package Tasks;
 
 import conexion.Slot;
 import resources.Mensaje;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Replicator extends Task {
@@ -26,9 +25,6 @@ public class Replicator extends Task {
             for (Slot s : salidas) {
                 s.setMensaje(m);
             }
-
         }
-
     }
-
 }

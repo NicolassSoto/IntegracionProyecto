@@ -5,7 +5,6 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-
 import conexion.Slot;
 import resources.Mensaje;
 import resources.XmlTransformer;
@@ -15,12 +14,13 @@ public class Splitter extends Task {
     private XmlTransformer transformer;
     Slot entrada;
     Slot salida;
+    private String xpathExpression; // Expresión XPath para dividir las bebidas
+
 
     public Splitter(Slot entrada, Slot salida) {
 
         this.entrada = entrada;
         this.salida = salida;
-
         this.transformer = new XmlTransformer();
 
     }
@@ -29,6 +29,12 @@ public class Splitter extends Task {
 
     }
 
+    public Splitter(Slot entrada, Slot splitterOutput, String comandabebidasbebida) {
+        this.entrada = entrada;
+        this.salida = splitterOutput;
+        this.xpathExpression = comandabebidasbebida;
+    }
+    
     public void run() {
 
         List<Mensaje> mensajes = entrada.getListaMensajes();
@@ -53,8 +59,6 @@ public class Splitter extends Task {
 
             } catch (ParserConfigurationException e) {
             }
-
         }
-
     }
 }

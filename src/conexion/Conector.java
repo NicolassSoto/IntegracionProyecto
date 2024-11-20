@@ -2,7 +2,6 @@ package conexion;
 
 import resources.XmlTransformer;
 
-
 public abstract class Conector {
 
     private Puerto puerto;
@@ -31,5 +30,4 @@ public abstract class Conector {
     public void setPuerto(Puerto puerto) {
         this.puerto = puerto;
     }
-
 }
