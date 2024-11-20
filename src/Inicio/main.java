@@ -1,34 +1,16 @@
 package Inicio;
 
-import Tasks.Aggregator;
-import Tasks.Distributor;
 import Tasks.Splitter;
 import conexion.Slot;
 import resources.Mensaje;
-import resources.XmlTransformer;
-
-import javax.xml.parsers.DocumentBuilder;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.Document;
@@ -36,13 +18,11 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 import java.io.StringWriter;
 
 public class main {
 
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, TransformerException {
-		// TODO Auto-generated method stub
 
 		String xml = "<cafe_order><order_id>2</order_id><drinks><drink><name>cafe</name><type>hot</type></drink><drink><name>chocolate</name><type>hot</type></drink><drink><name>coca-cola</name><type>cold</type></drink></drinks></cafe_order>";
 		
@@ -70,9 +50,7 @@ public class main {
          Document inputDoc = builder.parse(new ByteArrayInputStream(xml.getBytes()));
 
          m.setContenido(inputDoc);
-         entrada.setMensaje(m);
-         
-         
+         entrada.setMensaje(m);  
          Mensaje m2 = new Mensaje();
          Document inputDoc2 = builder.parse(new ByteArrayInputStream(xml2.getBytes()));
          m2.setContenido(inputDoc2);
@@ -81,12 +59,6 @@ public class main {
          spl.run();
          
          List<Mensaje> men = salida.getListaMensajes();
-         
-      
-        
-
-         // Imprimir el contenido
-         
          
          for(Mensaje mens : men) {
         	 System.out.println("NMensajes" + mens.getnMensajesEnConjunto() + "   IDCon" + mens.getIdConjunto() + "\n");
@@ -97,10 +69,8 @@ public class main {
              String xmlString = writer.toString();
              System.out.println(xmlString);
          }
-    
          
 	}
-	
 	
 	public static void imprimirDocumento(Document doc) throws Exception {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -109,6 +79,6 @@ public class main {
         DOMSource source = new DOMSource(doc);
         StreamResult result = new StreamResult(System.out);
 
-        transformer.transform(source, result); // Imprimir el documento
+        transformer.transform(source, result); 
     }
 }

@@ -1,7 +1,5 @@
 package Tasks;
 
-import java.util.List;
-
 import javax.xml.parsers.ParserConfigurationException;
 import conexion.Slot;
 import java.util.ArrayList;
