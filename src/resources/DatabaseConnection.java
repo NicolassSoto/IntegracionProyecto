@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DatabaseConnection {
 
@@ -11,8 +13,13 @@ public class DatabaseConnection {
     private static final String user = "sa";
     private static final String passwd = "";
 
-    public static Connection connect() throws SQLException {
-        return DriverManager.getConnection(db_url, user, passwd);
+    public static Connection connect(){
+        try {
+            return DriverManager.getConnection(db_url, user, passwd);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     public static void iniciarBD() {

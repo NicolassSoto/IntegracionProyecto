@@ -9,9 +9,9 @@ public class Slot {
     private ArrayList<Mensaje> listaMensajes;
 
     public Slot() {
-    	listaMensajes = new ArrayList<>();
+        listaMensajes = new ArrayList<>();
     }
-    
+
     public void setMensaje(Mensaje doc) {
         listaMensajes.add(doc);
     }
@@ -19,12 +19,17 @@ public class Slot {
     public ArrayList<Mensaje> getListaMensajes() {
         return listaMensajes;
     }
-    
-    public Mensaje desencolar(){
+
+    public Mensaje desencolar() {
         return listaMensajes.remove(0);
     }
-    
-    public boolean isEmpty(){
+
+    public boolean isEmpty() {
         return listaMensajes.isEmpty();
+    }
+    
+    
+    public Mensaje getMensaje() {
+        return listaMensajes.get(0);
     }
 }

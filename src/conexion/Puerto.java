@@ -18,9 +18,14 @@ public abstract class Puerto {
     public Slot getSlot() {
         return slot;
     }
+
     public void escribirMensaje(Document m) {
     }
+
     public Mensaje leerMensaje() {
         return null;
+    }
+
+    public void setIdCorrelacion(String idCorrelacion) {
     }
 }
