@@ -6,8 +6,12 @@ import resources.Mensaje;
 
 public class Slot {
 
-    private ArrayList<Mensaje> listaMensajes = new ArrayList<>();
+    private ArrayList<Mensaje> listaMensajes;
 
+    public Slot() {
+    	listaMensajes = new ArrayList<>();
+    }
+    
     public void setMensaje(Mensaje doc) {
         listaMensajes.add(doc);
     }

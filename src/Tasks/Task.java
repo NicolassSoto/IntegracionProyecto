@@ -11,7 +11,7 @@ public abstract class Task {
 
     private XmlTransformer procesador;
     
-    private ArrayList<Slot> input, output;
+    public ArrayList<Slot> input, output;
 
     public Task() {
     }

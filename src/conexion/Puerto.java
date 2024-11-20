@@ -1,5 +1,6 @@
 package conexion;
 
+import org.w3c.dom.Document;
 import resources.Mensaje;
 
 public abstract class Puerto {
@@ -17,7 +18,7 @@ public abstract class Puerto {
     public Slot getSlot() {
         return slot;
     }
-    public void escribirMensaje(Mensaje m) {
+    public void escribirMensaje(Document m) {
     }
     public Mensaje leerMensaje() {
         return null;

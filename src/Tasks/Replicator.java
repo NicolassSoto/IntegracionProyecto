@@ -5,48 +5,30 @@ import resources.Mensaje;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Replicator implements ITask {
+public class Replicator extends Task {
 
-	@Override
-	public void run() {
+    private Slot entrada;
+    private List<Slot> salidas;
 
-		Mensaje mensajeEntrada = obtenerMensajeEntrada();
+    public Replicator(Slot entrada, List<Slot> salidas) {
+        super();
+        this.entrada = entrada;
+        this.salidas = salidas;
+    }
 
-		if (mensajeEntrada != null) {
-			//Se crean múltiples copias del mensaje
-			List<Mensaje> mensajesReplicados = replicarMensaje(mensajeEntrada);
+    @Override
+    public void run() {
 
-			// Envía cada mensaje replicado a una salida 
-			enviarMensajesReplicados(mensajesReplicados);
-		}
-	}
+        List<Mensaje> mensajes = entrada.getListaMensajes();
 
-	private Mensaje obtenerMensajeEntrada() {
-		//Se recorren los slots para encontrar uno que tenga mensajes
-		for (Slot slot : listaSlots) {
-			if (!slot.isEmpty()) { 
-				return slot.extraerMensaje(); 
-			}
-		} 
-		return null; //Si no hay mensajes en los slots
-	}
+        for (Mensaje m : mensajes) {
 
-	private List<Mensaje> replicarMensaje(Mensaje mensajeOriginal) {
-		List<Mensaje> replicas = new ArrayList<>();
+            for (Slot s : salidas) {
+                s.setMensaje(m);
+            }
 
-		// Se crean copias profundas del mensaje original para replicarlo
-		for (int i = 0; i < listaSlots.size(); i++) {
-			Mensaje copia = new Mensaje(mensajeOriginal.getCabecera(), mensajeOriginal.getContenido());
-			replicas.add(copia);
-		}
+        }
 
-		return replicas;
-	}
+    }
 
-	private void enviarMensajesReplicados(List<Mensaje> mensajesReplicados) {
-		for (int i = 0; i < mensajesReplicados.size(); i++) {
-			Slot slotDestino = listaSlots.get(i); //Se asigna cada réplica a un Slot distinto
-			slotDestino.añadirABuffer(mensajesReplicados.get(i)); // Se añade mensaje al Slot
-		}
-	}
 }

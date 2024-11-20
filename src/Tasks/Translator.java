@@ -4,6 +4,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import conexion.Slot;
 import java.util.ArrayList;
+import java.util.List;
+
 import resources.Mensaje;
 import resources.XmlTransformer;
 
@@ -12,54 +14,26 @@ public class Translator extends Task {
     private XmlTransformer transformer;
     private String xsltFilePath;
 
-    public Translator() {
+    private Slot entrada, salida;
 
-    }
-
-    public Translator(ArrayList<Slot> entrada, ArrayList<Slot> salida, String xsltFilePath) {
-        super(entrada, salida);
+    public Translator(String xsltFilePath, Slot entrada, Slot salida) {
+        super();
         this.xsltFilePath = xsltFilePath;
-        this.transformer = new XmlTransformer();
-    }
-
-    public void procesarMensaje(Mensaje mensajeEntrada, String tipo) throws Exception {
-        //Convierte el contenido del mensaje (Document) a String
-        String xmlInput = documentToString(mensajeEntrada.getContenido());
-
-        //Hace la transformación XSLT
-        String contenidoTransformado = transformer.ApplyXSLT(xmlInput, xsltFilePath);
-
-        //Convierte el resultado transformado de String a Document
-        Document contenidoTraducido = stringToDocument(contenidoTransformado);
-
-        //Establece el contenido traducido en el mensaje
-        mensajeEntrada.setContenido(contenidoTraducido);
-
-        //Añade el mensaje transformado a la salida
-        for (Slot slotSalida : salida) {
-            slotSalida.añadirABuffer(mensajeEntrada);
-        }
-    }
-
-    //Método para convertir un String a Document
-    private Document stringToDocument(String xmlStr) throws Exception {
-        return transformer.stringToDocument(xmlStr); // Usamos el método de XmlTransformer
-    }
-
-    //Método para convertir Document a String
-    private String documentToString(Document doc) throws Exception {
-        return transformer.documentToString(doc); // Usamos el método de XmlTransformer
+        this.entrada = entrada;
+        this.salida = salida;
+        transformer = new XmlTransformer();
     }
 
     @Override
     public void run() throws IllegalArgumentException, ParserConfigurationException, Exception {
-        String tipo = "t";  //Se debe elegir un valor en base a qué se desea pasar
 
-        for (Slot slotEntrada : entrada) {
-            Mensaje mensaje = slotEntrada.extraerMensaje();
-            if (mensaje != null) {
-                procesarMensaje(mensaje, tipo);
-            }
+        List<Mensaje> mensajes = entrada.getListaMensajes();
+
+        for (Mensaje m : mensajes) {
+
+            Document resultado = transformer.aplicarXslt(m.getContenido(), xsltFilePath);
+            m.setContenido(resultado);
+            salida.setMensaje(m);
         }
     }
 }

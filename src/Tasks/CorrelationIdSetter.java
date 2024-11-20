@@ -9,49 +9,39 @@ import resources.XmlTransformer;
 //Almacena en la cabecera un ID de correlacion
 public class CorrelationIdSetter extends Task {
 
-	private Slot entrada;
-	private Slot salida;
+    private Slot entrada;
+    private Slot salida;
 
-	private int ID = 0;
+    private int ID = 0;
 
-	// CONSTRUCTORES
-	public CorrelationIdSetter() {
-	}
+    // CONSTRUCTORES
+    public CorrelationIdSetter() {
+    }
 
-	public CorrelationIdSetter(List<Slot> entrada, List<Slot> salida) {
+    public CorrelationIdSetter(Slot entrada, Slot salida) {
 
-		this.entrada = entrada.get(0);
-		this.salida = salida.get(0);
+        this.entrada = entrada;
+        this.salida = salida;
 
-	}
+    }
 
-	// SETTERS
+    // SETTERS
+    public void run() {
 
-	public void setEntrada(List<Slot> entrada) {
-		this.entrada = entrada.get(0);
-	}
+        List<Mensaje> mensajes = entrada.getListaMensajes();
 
-	public void setSalida(List<Slot> salida) {
-		this.salida = salida.get(0);
-	}
+        for (Mensaje m : mensajes) {
+            m.setIdMensaje(generateID());
+            salida.setMensaje(m);
+        }
 
-	public void run() {
+    }
 
-		Mensaje m;
+    private String generateID() {
 
-		while (!entrada.isEmpty()) {
-			m = entrada.desencolar();
-			m.setIdMensaje(generateID());
-			salida.setMensaje(m);
-		}
+        ID++;
 
-	}
-
-	private String generateID() {
-
-		ID++;
-
-		return String.format("%06d", ID);
-	}
+        return String.format("%06d", ID);
+    }
 
 }
