@@ -5,8 +5,11 @@ import org.w3c.dom.Document;
 public class Mensaje {
 
     //CABECERA
-    private String idMensaje;
+	private String idMensaje;
+	private String idMensajeCorrelacion;
     private String idConjunto;
+    private String posicionEnConjunto;
+    private Document original;
     int nMensajesEnConjunto;
 
     //CUERPO
