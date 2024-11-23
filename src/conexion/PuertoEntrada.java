@@ -2,12 +2,16 @@ package conexion;
 
 import org.w3c.dom.Document;
 import resources.Mensaje;
+<<<<<<< HEAD
 import resources.XmlTransformer;
 
 import java.util.ArrayList;
 
 public class PuertoEntrada {
+=======
+>>>>>>> branch 'master' of https://Cristiangb02@github.com/NicolassSoto/IntegracionProyecto.git
 
+<<<<<<< HEAD
     private ArrayList<Mensaje> listaMensajes;
     private XmlTransformer transformer;
 
@@ -35,4 +39,20 @@ public class PuertoEntrada {
         }
     }
 
+=======
+public class PuertoEntrada extends Puerto{
+    
+    Mensaje m;
+
+    public PuertoEntrada(Slot s) {
+        super(s);
+        m = new Mensaje();
+    }
+
+    @Override
+    public void escribirMensaje(Document body) {
+        m.setContenido(body);
+        getSlot().setMensaje(m);
+    }
+>>>>>>> branch 'master' of https://Cristiangb02@github.com/NicolassSoto/IntegracionProyecto.git
 }

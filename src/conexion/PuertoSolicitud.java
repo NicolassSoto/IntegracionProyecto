@@ -1,23 +1,14 @@
 package conexion;
 
 import resources.Mensaje;
-import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.JSQLParserException;
+import org.w3c.dom.Document;
 
-public class PuertoSolicitud implements IPuerto{
+public class PuertoSolicitud extends Puerto {
 
-	public Mensaje recibirMensaje() {
-		
-			Mensaje m = slot.get(0).extraerMensaje();
-			
-			boolean isOk = checkSQL(m);
-			
-			if(isOk) {
-				return m;			
-			}else {
-				return null;
-			}
+    Slot salida;
+    Mensaje m;
 
+<<<<<<< HEAD
 	}
 	
 	public void enviarMensaje(Mensaje m) {
@@ -30,7 +21,15 @@ public class PuertoSolicitud implements IPuerto{
 	}
 	private boolean checkSQL(Mensaje m) {
 		 String content = m.getContenido().getTextContent().trim();
+=======
+    public PuertoSolicitud(Slot slot, Slot salida) {
+        super(slot);
+        this.salida = salida;
+        m = new Mensaje();
+    }
+>>>>>>> branch 'master' of https://Cristiangb02@github.com/NicolassSoto/IntegracionProyecto.git
 
+<<<<<<< HEAD
 	        try {
 	          
 	            CCJSqlParserUtil.parse(content);
@@ -55,4 +54,22 @@ public class PuertoSolicitud implements IPuerto{
 	        return false;
 	    }	
 	}
+=======
+    @Override
+    public Mensaje leerMensaje() {
+        return getSlot().desencolar();
+    }
+
+    @Override
+    public void escribirMensaje(Document body) {
+        m.setContenido(body);
+        salida.setMensaje(m);
+    }
+    
+    @Override
+    public void setIdCorrelacion(String idCorrelacion){
+        m.setIdConjunto(idCorrelacion);
+    }
+
+>>>>>>> branch 'master' of https://Cristiangb02@github.com/NicolassSoto/IntegracionProyecto.git
 }

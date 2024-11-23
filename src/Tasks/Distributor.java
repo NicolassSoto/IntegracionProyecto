@@ -12,72 +12,56 @@ import conexion.Slot;
 import resources.Mensaje;
 
 //Distribuye los mensajes de una entrada hacia varias salidas siguiendo un criterio.
+<<<<<<< HEAD
 public class Distributor extends ITask{
+=======
+public class Distributor extends Task {
+>>>>>>> branch 'master' of https://Cristiangb02@github.com/NicolassSoto/IntegracionProyecto.git
 
-	private List<Slot> entrada;
-	private List<Slot> salida;
-	
-	public Distributor() {}
-	
-	public Distributor(List<Slot> entrada, List<Slot> salida) {
-		this.entrada = entrada;
-		this.salida = salida;	
-	}
-	
-	public void setEntrada(List<Slot> entrada) {
-		this.entrada = entrada;
-	}
-	
-	public void setSalida(List<Slot> salida) {
-		this.salida = salida;
-	}
-	
-	
-public void run() {
-		
-	//Se crea una instancia XPath y se define la expresion
-	//Por ejemplo vamos a obtener en un String el atributo tipo
-	
-	
-	XPath xpath = XPathFactory.newInstance().newXPath();
-	
-	try {
-		XPathExpression expr = xpath.compile("//tipo/text()");
-	
-	
-	
-	//Entramos en el bucle para comprobar cada mensaje y enviarlo a una salida concreta segun el tipo
-	while(!entrada.get(0).isEmpty()) {
-		
-		Mensaje m = entrada.get(0).extraerMensaje();
-		
-		String tipo = (String) expr.evaluate(m.getContenido(), XPathConstants.STRING);
-		
-		
-		
-		switch(tipo) {
-		
-		case "tipo1": 
-			salida.get(0).añadirABuffer(m);
-			break;
-			
-			
-		case "tipo2":
-			salida.get(1).añadirABuffer(m);
-			break;
-		default:
-		
-		}
-		
-		
-	}
-	
-	
-	} catch (XPathExpressionException e) {
-		e.printStackTrace();
-	}
-	
-	
-	
-	}
+    private Slot entrada;
+    private List<Slot> salida;
+
+    public Distributor() {
+    }
+
+    public Distributor(Slot entrada, List<Slot> salida) {
+        this.entrada = entrada;
+        this.salida = salida;
+    }
+
+    public void run() {
+
+        //Se crea una instancia XPath y se define la expresion
+        //Por ejemplo vamos a obtener en un String el atributo tipo
+        XPath xpath = XPathFactory.newInstance().newXPath();
+
+        try {
+            XPathExpression expr = xpath.compile("//tipo/text()");
+
+            List<Mensaje> mensajes = entrada.getListaMensajes();
+
+            for (Mensaje m : mensajes) {
+
+                String tipo = (String) expr.evaluate(m.getContenido(), XPathConstants.STRING);
+
+                switch (tipo) {
+
+                    case "cold":
+                        salida.get(0).setMensaje(m);
+                        break;
+
+                    case "hot":
+                        salida.get(1).setMensaje(m);
+                        break;
+                    default:
+
+                }
+
+            }
+
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

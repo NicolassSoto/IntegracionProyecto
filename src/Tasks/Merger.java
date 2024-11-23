@@ -6,44 +6,31 @@ import conexion.Slot;
 import resources.Mensaje;
 
 //Encamina los mensajes de todas sus entradas hacia una única salida
+<<<<<<< HEAD
 public class Merger extends ITask {
+=======
+public class Merger extends Task {
+>>>>>>> branch 'master' of https://Cristiangb02@github.com/NicolassSoto/IntegracionProyecto.git
 
-	private List<Slot> entrada;
-	private Slot salida;
+    private List<Slot> entradas;
+    private Slot salida;
 
-	public Merger() {
-		
-	}
+    public Merger(List<Slot> entradas, Slot salida) {
+        super();
+        this.entradas = entradas;
+        this.salida = salida;
+    }
 
-	public Merger(List<Slot> entrada, Slot salida) {
-		super();
-		this.entrada = entrada;
-		this.salida = salida;
-	}
+    public void run() {
 
+        for (Slot s : entradas) {
 
-	public void run() {
-		 if (entrada == null || entrada.isEmpty()) {
-	            System.out.println("No hay entradas para procesar.");
-	            return;
-	        }
-	        if (salida == null) {
-	            System.out.println("No se ha definido una salida.");
-	            return;
-	        }
+            List<Mensaje> mensajes = s.getListaMensajes();
+            for (Mensaje m : mensajes) {
+                salida.setMensaje(m);
+            }
 
-	        // Recorremos cada Slot en la lista de entrada.
-	        for (Slot slot : entrada) {
-	            // Verificamos que el slot no sea nulo y tenga contenido.
-	            if (slot != null && slot.isEmpty()) {
-	                // Obtenemos el mensaje del Slot de entrada.
-	                Mensaje mensaje = slot.extraerMensaje();
+        }
 
-	                // Envía el mensaje al Slot de salida.
-	                salida.añadirABuffer(mensaje);
-	            }
-	        }
-	        System.out.println("Todos los mensajes de entrada han sido enviados a la salida.");
-
-	}
+    }
 }

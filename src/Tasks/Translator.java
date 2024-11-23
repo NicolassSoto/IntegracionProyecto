@@ -1,23 +1,30 @@
 package Tasks;
 
-import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
-
 import conexion.Slot;
+import java.util.List;
+
 import resources.Mensaje;
 import resources.XmlTransformer;
 
+<<<<<<< HEAD
 public class Translator extends ITask {
+=======
+public class Translator extends Task {
+>>>>>>> branch 'master' of https://Cristiangb02@github.com/NicolassSoto/IntegracionProyecto.git
 
-    private List<Slot> entrada;
-    private List<Slot> salida;
     private XmlTransformer transformer;
     private String xsltFilePath;
 
-    public Translator(List<Slot> entrada, List<Slot> salida, String xsltFilePath) {
+    private Slot entrada, salida;
+
+    public Translator(String xsltFilePath, Slot entrada, Slot salida) {
+        super();
+        this.xsltFilePath = xsltFilePath;
         this.entrada = entrada;
         this.salida = salida;
+<<<<<<< HEAD
         this.xsltFilePath = xsltFilePath;
         this.transformer = new XmlTransformer();
     }
@@ -52,17 +59,21 @@ public class Translator extends ITask {
     //Método para convertir Document a String
     private String documentToString(Document doc) throws Exception {
         return transformer.documentToString(doc); // Usamos el método de XmlTransformer
+=======
+        transformer = new XmlTransformer();
+>>>>>>> branch 'master' of https://Cristiangb02@github.com/NicolassSoto/IntegracionProyecto.git
     }
 
     @Override
     public void run() throws IllegalArgumentException, ParserConfigurationException, Exception {
-        String tipo = "t";  //Se debe elegir un valor en base a qué se desea pasar
 
-        for (Slot slotEntrada : entrada) {
-            Mensaje mensaje = slotEntrada.extraerMensaje();
-            if (mensaje != null) {
-                procesarMensaje(mensaje, tipo);
-            }
+        List<Mensaje> mensajes = entrada.getListaMensajes();
+
+        for (Mensaje m : mensajes) {
+
+            Document resultado = transformer.aplicarXslt(m.getContenido(), xsltFilePath);
+            m.setContenido(resultado);
+            salida.setMensaje(m);
         }
     }
 }
