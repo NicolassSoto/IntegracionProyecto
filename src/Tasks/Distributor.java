@@ -16,7 +16,7 @@ public class Distributor extends Task {
 
     private Slot entrada;
     private List<Slot> salida;
-
+    
     public Distributor() {
     }
 
@@ -24,6 +24,7 @@ public class Distributor extends Task {
         this.entrada = entrada;
         this.salida = salida;
     }
+    
 
     public void run() {
 
@@ -61,3 +62,4 @@ public class Distributor extends Task {
 
     }
 }
+

@@ -29,10 +29,10 @@ public class Splitter extends Task {
 
     }
 
-    public Splitter(Slot entrada, Slot splitterOutput, String comandabebidasbebida) {
+    public Splitter(Slot entrada, Slot splitterOutput, String xpathExpression) {
         this.entrada = entrada;
         this.salida = splitterOutput;
-        this.xpathExpression = comandabebidasbebida;
+        this.xpathExpression = xpathExpression;
     }
     
     public void run() {
