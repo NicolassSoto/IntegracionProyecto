@@ -21,7 +21,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
 
 public class main {
-
+//creo que ya esta arreglado
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, TransformerException {
 
 		String xml = "<cafe_order><order_id>2</order_id><drinks><drink><name>cafe</name><type>hot</type></drink><drink><name>chocolate</name><type>hot</type></drink><drink><name>coca-cola</name><type>cold</type></drink></drinks></cafe_order>";
