@@ -7,6 +7,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.Document;
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.List;
 import resources.XmlTransformer;
 
@@ -17,6 +18,13 @@ public class mainDefinitivo {
         String file = "ruta/al/archivo.xml"; 
         XmlTransformer transformerCold = null;
         XmlTransformer transformerHot = null;
+        String tagSplitter = "drink";
+        String tagAggregator = "drinks";
+        
+        List<String> expresiones = new ArrayList<>();
+        expresiones.add("//drink[type='cold']"); // Expresión para drinks frías
+        expresiones.add("//drink[type='hot']");  // Expresión para drinks calientes
+
 
         //Slots para la comunicación entre tareas
         
@@ -79,11 +87,11 @@ public class mainDefinitivo {
         
 
         //CONEXIÓN ENTRE TAREAS
-        Splitter splitter = new Splitter(splitterInput, splitterOutput, "/comanda/bebidas/bebida");
+        Splitter splitter = new Splitter(splitterInput, splitterOutput, tagSplitter);
         
         CorrelationIdSetter idSetter = new CorrelationIdSetter(splitterOutput, salidaIdSetter);
         
-        Distributor distributor = new Distributor(salidaIdSetter, salida);
+        Distributor distributor = new Distributor(salidaIdSetter, salida, expresiones);
         
         Replicator replicatorCold = new Replicator(distributorColdInput, replicatorColdOutput);    
         Replicator replicatorHot = new Replicator(distributorHotInput, replicatorHotOutput);
@@ -99,7 +107,7 @@ public class mainDefinitivo {
         
         Merger merger = new Merger(mergerInput, mergerOutput);
         
-        Aggregator aggregator = new Aggregator(mergerOutput, aggregatorOutput);
+        Aggregator aggregator = new Aggregator(mergerOutput, aggregatorOutput, tagAggregator);
 
         Mensaje mensaje = crearMensajeDesdeXML(file);
         splitterInput.setMensaje(mensaje);

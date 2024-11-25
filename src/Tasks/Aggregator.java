@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.w3c.dom.Document;
+
 import conexion.Slot;
 import resources.Mensaje;
 import resources.XmlTransformer;
@@ -16,14 +18,16 @@ public class Aggregator extends Task {
     private Slot entrada;
     private Slot salida;
     private XmlTransformer transformer;
+    private String tag;
 
     public Aggregator() {
 
     }
 
-    public Aggregator(Slot entrada, Slot salida) {
+    public Aggregator(Slot entrada, Slot salida, String tag) {
         this.entrada = entrada;
         this.salida = salida;
+        this.tag = tag;
         transformer = new XmlTransformer();
     }
 
@@ -49,7 +53,16 @@ public class Aggregator extends Task {
         // Llamar a la función con cada conjunto de mensajes
         for (List<Mensaje> conjunto : mensajesPorConjunto.values()) {
             // Llamamos a la función que debes definir
-            salida.setMensaje(transformer.combinarConjunto(conjunto));
+        	
+        	Document doc = transformer.combinarConjunto(conjunto, tag);
+        	
+        	Mensaje m = new Mensaje();
+        	
+        	m.setContenido(doc);
+        	m.setIdMensaje(conjunto.get(0).getIdConjunto());
+        			
+        	
+            salida.setMensaje(m);
         }
     }
 

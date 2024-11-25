@@ -14,6 +14,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -54,10 +55,7 @@ public class XmlTransformer {
 	// de elemento
 	public List<Mensaje> splitXmlMessage(Mensaje originalMes, String tagName) throws ParserConfigurationException {
 
-		// OBTENER NODOS
-		// BORRAR NODOS
-		// ITERAR SOBRE CADA NODO PARA CONVERTIRLO EN MENSAJE, PONERLE LONG Y POSICION
-		// EN EL ULTIMO SE AÑADE EL DOCUMENT VACIO
+	
 		Document originalDoc = originalMes.getContenido();
 		
 		NodeList nodes = originalDoc.getElementsByTagName(tagName);
@@ -117,33 +115,40 @@ public class XmlTransformer {
 		return writer.getBuffer().toString();
 	}
 
-	public static Mensaje combinarConjunto(List<Mensaje> conjunto) throws Exception {
+	public static Document combinarConjunto(List<Mensaje> conjunto, String tag) throws Exception {
 
-		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-		Document nuevoDocumento = docBuilder.newDocument();
+		
+        conjunto.sort(Comparator.comparingInt(Mensaje::getPosicionEnConjunto));
 
-		Element rootElement = nuevoDocumento.createElement("root");
-		nuevoDocumento.appendChild(rootElement);
+        Document originalDoc = conjunto.get(conjunto.size() - 1).getOriginal();
 
-		Element orderIdElement = nuevoDocumento.createElement("order_id");
-		orderIdElement.appendChild(nuevoDocumento.createTextNode(conjunto.get(0).getIdConjunto()));
-		rootElement.appendChild(orderIdElement);
+        NodeList destinoList = originalDoc.getElementsByTagName(tag);
+        if (destinoList.getLength() == 0) {
+            throw new Exception("El nodo destino '" + tag + "' no existe en el documento.");
+        }
+        
+        Node nodoDestinoElement = destinoList.item(0); 
 
-		for (Mensaje mensaje : conjunto) {
-			Document contenido = mensaje.getContenido();
-			NodeList drinkList = contenido.getElementsByTagName("drink");
+       
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
 
-			Node drinkNode = drinkList.item(0);
+       
+        for (Mensaje mensaje : conjunto) {
+            Document contenido = mensaje.getContenido();
 
-			Node importedNode = nuevoDocumento.importNode(drinkNode, true);
-			rootElement.appendChild(importedNode); // Añadir el nodo <drink> al <root>
+            // Importar y añadir todos los nodos del contenido actual al nodo destino
+            NodeList childNodes = contenido.getDocumentElement().getChildNodes();
+            for (int i = 0; i < childNodes.getLength(); i++) {
+                Node importedNode = originalDoc.importNode(childNodes.item(i), true);
+                nodoDestinoElement.appendChild(importedNode);
+            }
+        }
 
-		}
-		Mensaje m = new Mensaje();
-		m.setContenido(nuevoDocumento);
-		return m;
-	}
+        // Retornar el nuevo documento modificado
+        return originalDoc;
+    }
+	
 
 	// Convertir un String a Document
 	public Document stringToDocument(String xmlStr) throws Exception {
