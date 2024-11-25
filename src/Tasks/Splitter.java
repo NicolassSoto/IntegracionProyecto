@@ -14,7 +14,7 @@ public class Splitter extends Task {
     private XmlTransformer transformer;
     Slot entrada;
     Slot salida;
-    private String xpathExpression; // Expresión XPath para dividir las bebidas
+    private String splitTag; // Expresión XPath para dividir las bebidas
 
 
     public Splitter(Slot entrada, Slot salida) {
@@ -29,10 +29,10 @@ public class Splitter extends Task {
 
     }
 
-    public Splitter(Slot entrada, Slot splitterOutput, String xpathExpression) {
+    public Splitter(Slot entrada, Slot splitterOutput, String splitTag) {
         this.entrada = entrada;
         this.salida = splitterOutput;
-        this.xpathExpression = xpathExpression;
+        this.splitTag = splitTag;
     }
     
     public void run() {
@@ -41,22 +41,14 @@ public class Splitter extends Task {
 
         for (Mensaje mensaje : mensajes) {
 
-            NodeList orderIdList = mensaje.getContenido().getElementsByTagName("order_id");
-
-            String idConjunto = orderIdList.item(0).getTextContent();
-
             try {
-                List<Document> drinks = transformer.splitXmlMessage(mensaje.getContenido(), "drink");
-
-                for (Document d : drinks) {
-                    Mensaje m = new Mensaje();
-                    m.setContenido(d);
-                    m.setIdConjunto(idConjunto);
-                    m.setnMensajesEnConjunto(drinks.size());
-
-                    salida.setMensaje(m);
+                List<Mensaje> messageList = transformer.splitXmlMessage(mensaje, splitTag);
+                
+                for(Mensaje m : messageList) {
+                	salida.setMensaje(m);
                 }
-
+                
+                
             } catch (ParserConfigurationException e) {
             }
         }

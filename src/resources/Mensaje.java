@@ -8,7 +8,7 @@ public class Mensaje {
 	private String idMensaje;
 	private String idMensajeCorrelacion;
     private String idConjunto;
-    private String posicionEnConjunto;
+    private int posicionEnConjunto;
     private Document original;
     int nMensajesEnConjunto;
 
@@ -27,7 +27,31 @@ public class Mensaje {
         this.contenido = contenido;
     }
 
-    public String getIdMensaje() {
+    public String getIdMensajeCorrelacion() {
+		return idMensajeCorrelacion;
+	}
+
+	public void setIdMensajeCorrelacion(String idMensajeCorrelacion) {
+		this.idMensajeCorrelacion = idMensajeCorrelacion;
+	}
+
+	public int getPosicionEnConjunto() {
+		return posicionEnConjunto;
+	}
+
+	public void setPosicionEnConjunto(int posicionEnConjunto) {
+		this.posicionEnConjunto = posicionEnConjunto;
+	}
+
+	public Document getOriginal() {
+		return original;
+	}
+
+	public void setOriginal(Document original) {
+		this.original = original;
+	}
+
+	public String getIdMensaje() {
         return idMensaje;
     }
 
