@@ -28,6 +28,7 @@ public class mainDefinitivo {
         XmlTransformer transformerHot = null;
         String tagSplitter = "drink";
         String tagAggregator = "drinks";
+        String xsltTransformer ="./Transformer.xml";
 
         List<String> expresiones = new ArrayList<>();
         expresiones.add("//drink[type='cold']"); // Expresión para drinks frías
@@ -84,15 +85,16 @@ public class mainDefinitivo {
         //Context enricher (bebidas frías)
         Slot enricherColdContext = new Slot();
         Slot enricherColdMessaje = new Slot();
-        List<Slot> enricherColdOutput = List.of(enricherColdContext, enricherColdMessaje);
+        Slot enricherColdOutput = new Slot();
+       
 
         //Context enricher (bebidas calientes)
         Slot enricherHotContext = new Slot();
         Slot enricherHotMessaje = new Slot();
-        List<Slot> enricherHotOutput = List.of(enricherHotContext, enricherHotMessaje);
+        Slot enricherHotOutput = new Slot();
 
         //Merger
-        List<List<Slot>> mergerInput = List.of(enricherColdOutput, enricherHotOutput);
+        List<Slot> mergerInput = List.of(enricherColdOutput, enricherHotOutput);
         Slot mergerOutput = new Slot();
 
         //Aggregator
@@ -120,15 +122,16 @@ public class mainDefinitivo {
         Replicator replicatorCold = new Replicator(distributorColdOutput, replicatorColdOutput);
         Replicator replicatorHot = new Replicator(distributorHotOutput, replicatorHotOutput);
 
-        Translator translatorCold = new Translator("", replicatorColdOutputToTranslator, translatorColdOutput);
-        Translator translatorHot = new Translator("", replicatorHotOutputToTransalator, translatorHotOutput);
+        Translator translatorCold = new Translator(xsltTransformer, replicatorColdOutputToTranslator, translatorColdOutput);
+        Translator translatorHot = new Translator(xsltTransformer, replicatorHotOutputToTransalator, translatorHotOutput);
 
         Correlator correlatorCold = new Correlator(replicatorColdOutput, correlatorColdOutput);
         Correlator correlatorHot = new Correlator(replicatorHotOutput, correlatorHotInput);
 
-        ContextEnricher enricherCold = new ContextEnricher(correlatorColdOutput.get(0), enricherColdContext, salidaIdSetter, transformerCold);
-        ContextEnricher enricherHot = new ContextEnricher(correlatorColdOutput, enricherColdContext, salidaIdSetter, transformerHot);
+        ContextEnricher enricherCold = new ContextEnricher(correlatorColdOutput1, correlatorColdInput2, enricherColdOutput, transformerCold);
+        ContextEnricher enricherHot = new ContextEnricher(correlatorHotOutput1, correlatorHotOutput2, enricherHotOutput, transformerHot);
 
+       
         Merger merger = new Merger(mergerInput, mergerOutput);
 
         Aggregator aggregator = new Aggregator(mergerOutput, aggregatorOutput, tagAggregator);
@@ -149,6 +152,7 @@ public class mainDefinitivo {
 
         List<Mensaje> resultadoFinal = aggregatorOutput.getListaMensajes();
         for (Mensaje m : resultadoFinal) {
+        	
             System.out.println(m.toString());  // Muestra el mensaje enriquecido
         }
     }

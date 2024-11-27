@@ -8,10 +8,10 @@ import resources.Mensaje;
 //Encamina los mensajes de todas sus entradas hacia una única salida
 public class Merger extends Task {
 
-    private List<List<Slot>> entradas;
+    private List<Slot> entradas;
     private Slot salida;
 
-    public Merger(List<List<Slot>> entradas, Slot salida) {
+    public Merger(List<Slot> entradas, Slot salida) {
         super();
         this.entradas = entradas;
         this.salida = salida;
@@ -19,9 +19,9 @@ public class Merger extends Task {
 
     public void run() {
 
-        for (List<Slot> s : entradas) {
+        for (Slot s : entradas) {
 
-            List<Mensaje> mensajes = s.getFirst().getListaMensajes();
+            List<Mensaje> mensajes = s.getListaMensajes();
             for (Mensaje m : mensajes) {
                 salida.setMensaje(m);
             }

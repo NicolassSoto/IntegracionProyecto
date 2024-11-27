@@ -2,6 +2,8 @@ package resources;
 
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.dom.DOMResult;
+
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import org.w3c.dom.Document;
@@ -27,29 +29,22 @@ public class XmlTransformer {
 
 	}
 
-	public Document aplicarXslt(Document inputDoc, String xsltFilePath) throws Exception {
+	 public Document aplicarXslt(Document inputDoc, String xsltFilePath) throws Exception {
+	        // Configurar el transformador con la hoja de estilo XSLT
+	        TransformerFactory factory = TransformerFactory.newInstance();
+	        StreamSource xsltStream = new StreamSource(new File(xsltFilePath));
+	        Transformer transformer = factory.newTransformer(xsltStream);
 
-		TransformerFactory factory = TransformerFactory.newInstance();
+	        // Crear un resultado DOM
+	        DOMResult result = new DOMResult();
 
-		StreamSource xsltStream = new StreamSource(new File(xsltFilePath));
-		Transformer transformer = factory.newTransformer(xsltStream);
+	        // Aplicar la transformación al DOM
+	        DOMSource source = new DOMSource(inputDoc);
+	        transformer.transform(source, result);
 
-		DOMSource source = new DOMSource(inputDoc);
-
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
-		StreamResult result = new StreamResult(byteArrayOutputStream);
-
-		transformer.transform(source, result);
-
-		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-
-		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-		Document outputDoc = docBuilder.parse(byteArrayInputStream);
-
-		return outputDoc;
-	}
+	        // Retornar el documento de salida
+	        return (Document) result.getNode();
+	    }
 
 	// Método para dividir un mensaje XML en múltiples Documents según la etiqueta
 	// de elemento
