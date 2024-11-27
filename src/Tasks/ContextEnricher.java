@@ -32,12 +32,14 @@ public class ContextEnricher extends Task {
 
         	List<Mensaje> mensajes = entrada.getListaMensajes();
         	List<Mensaje> contextos = contexto.getListaMensajes();
-        	
+        
             for(int i = 0; i < mensajes.size(); i++) {
+            	Mensaje m = mensajes.get(i);
+            	Mensaje context = contextos.get(i);
             	
-            	Document contenidoEnriquecido = transformer.enriquecerMensajeConContexto(mensajes.get(i).getContenido(), contextos.get(i).getContenido());
-            	mensajes.get(i).setContenido(contenidoEnriquecido);
-            	salida.setMensaje(mensajes.get(i));
+            	Document contenidoEnriquecido = transformer.combinarDocumentos(m.getContenido(), context.getContenido());
+            	m.setContenido(contenidoEnriquecido);
+            	salida.setMensaje(m);
             }
         	
         

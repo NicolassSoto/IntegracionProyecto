@@ -4,8 +4,8 @@ import resources.XmlTransformer;
 
 public abstract class Conector {
 
-    public Puerto puerto;
-    public String fichero;
+    private Puerto puerto;
+    private String fichero;
     
     public XmlTransformer transformer = new XmlTransformer();
     
@@ -18,6 +18,7 @@ public abstract class Conector {
         this.puerto = puerto;
 
     }
+    
 
     public String getFichero() {
         return fichero;

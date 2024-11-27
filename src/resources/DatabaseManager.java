@@ -37,12 +37,12 @@ public class DatabaseManager {
 
                 String insertDataSQL = """
                     INSERT INTO BEBIDA (nombre, stock) VALUES 
-                    ('Té', 20),
-                    ('Agua', 50),
-                    ('Coca-Cola', 30),
-                    ('Guaraná', 15),
-                    ('Fanta', 25),
-                    ('Tónica', 10);
+                    ('te', 0),
+                    ('agua', 50),
+                    ('coca-cola', 30),
+                    ('guarana', 15),
+                    ('fanta', 25),
+                    ('tonica', 10);
                 """;
 
                 statement.execute(insertDataSQL);

@@ -25,6 +25,10 @@ public abstract class Puerto {
     public Mensaje leerMensaje() {
         return null;
     }
+    
+    public Document leerDoc() {
+    	return slot.desencolar().getContenido();
+    }
 
     public void setIdCorrelacion(String idCorrelacion) {
     }

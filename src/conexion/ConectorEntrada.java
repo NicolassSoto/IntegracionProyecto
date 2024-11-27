@@ -20,10 +20,10 @@ public class ConectorEntrada extends Conector {
     }
 
     public void readFolder() {
-    	 // Crear un objeto File para representar la carpeta
-        File carpeta = new File(fichero);
+    	
+        File carpeta = new File(getFichero());
         
-        // Verificar si la carpeta existe y es un directorio
+       
         if (carpeta.exists() && carpeta.isDirectory()) {
             // Obtener la lista de archivos en la carpeta
             File[] archivos = carpeta.listFiles((dir, name) -> name.endsWith(".xml"));
@@ -34,7 +34,7 @@ public class ConectorEntrada extends Conector {
                         // Procesar cada archivo XML
                         Document document = convertirXMLaDocumento(archivo);
                         // Enviar el documento por el puerto
-                        puerto.escribirMensaje(document);
+                        getPuerto().escribirMensaje(document);
                     } catch (Exception e) {
                         // Manejar excepciones, como errores al procesar el archivo XML
                         System.err.println("Error al procesar el archivo: " + archivo.getName());

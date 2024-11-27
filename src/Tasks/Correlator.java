@@ -40,7 +40,7 @@ public class Correlator extends Task {
             while (iteratorB.hasNext()) {
                 Mensaje mensajeB = iteratorB.next();
 
-                if (mensajeA.getIdMensaje().equals(mensajeB.getIdMensaje())) {
+                if (mensajeA.getIdMensajeCorrelacion().equals(mensajeB.getIdMensajeCorrelacion())) {
                     // Enviar mensajes correlacionados a las salidas
                     salidaA.setMensaje(mensajeA);
                     salidaB.setMensaje(mensajeB);

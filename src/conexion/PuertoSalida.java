@@ -1,5 +1,7 @@
 package conexion;
 
+import org.w3c.dom.Document;
+
 import resources.Mensaje;
 
 public class PuertoSalida extends Puerto {
@@ -8,9 +10,9 @@ public class PuertoSalida extends Puerto {
         super(slot);
     }
     
-    @Override
-    public Mensaje leerMensaje() {
-        return getSlot().desencolar();
+    
+    public Document leer() {
+        return getSlot().desencolar().getContenido();
     }
     
 }

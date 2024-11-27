@@ -1,8 +1,10 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-    <xsl:output method="text" />
+    <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
-    <!-- Plantilla raíz que se aplica al nodo raíz del XML -->
+   
     <xsl:template match="/drink">
-        SELECT stock FROM BEBIDA WHERE nombre = '<xsl:value-of select="name" />';
+        <query>
+           SELECT stock FROM BEBIDA WHERE nombre = '<xsl:value-of select="name" />';
+        </query>
     </xsl:template>
 </xsl:stylesheet>

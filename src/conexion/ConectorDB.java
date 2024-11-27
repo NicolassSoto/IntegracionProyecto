@@ -14,84 +14,124 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import resources.DatabaseManager;
 
-public class ConectorDB extends Conector {
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import org.w3c.dom.*;
+
+public class ConectorDB {
 
     private Connection connection;
-
-    public ConectorDB(Puerto puerto, Connection con) {
-        super(puerto);
-
+    private PuertoSolicitud puerto;
+    
+   
+    public ConectorDB(PuertoSolicitud puerto, Connection con) {
+        this.puerto = puerto;
         this.connection = con;
     }
 
-    public void serveDrinks() {
+    public void run() {
+        while (!puerto.isEmpty()) {
+            
+        	puerto.selectMensaje();
+        	
+            String[] consultas = extraerConsulta(puerto.getBody(), "//query");
 
-        while (!getPuerto().getSlot().getListaMensajes().isEmpty()) {
-            String idCorrelacion = getPuerto().getSlot().getMensaje().getIdMensaje();
-            String[] consultas = extraerConsulta(getPuerto().getSlot().desencolar().getContenido(), "//consulta_sql");
-
+           
+            
             if (consultas != null && consultas.length > 0) {
-                for (String consulta : consultas) {
-                    try {
-                        boolean disponible = consultarDisponibilidadEnBaseDeDatos(consulta);
+            	for (String consulta : consultas) {
+            	    try {
+            	        // Verifica la disponibilidad en la base de datos
+            	        boolean disponible = consultarDisponibilidadEnBaseDeDatos(consulta);
 
-                        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-                        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-                        Document document = documentBuilder.newDocument();
+            	        // Crear un nuevo DocumentBuilder para construir el documento XML
+            	        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            	        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            	        Document document = documentBuilder.newDocument();
 
-                        Element drinkElement = document.createElement("stock");
-                        if (disponible) {
-                            drinkElement.setTextContent("Si");
-                            getPuerto().setIdCorrelacion(idCorrelacion);
-                            getPuerto().escribirMensaje(document);
-                        } else {
-                            drinkElement.setTextContent("No");
-                            getPuerto().setIdCorrelacion(idCorrelacion);
-                            getPuerto().escribirMensaje(document);
-                        }
+            	     
+            	        Element stockElement = document.createElement("stock");
 
-                    } catch (ParserConfigurationException ex) {
-                        Logger.getLogger(ConectorDB.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
+            	        if (disponible) {
+            	            
+            	            stockElement.setTextContent("si");
+            	        } else {
+            	           
+            	            stockElement.setTextContent("no");
+            	        }
+
+            	      
+            	        document.appendChild(stockElement);
+
+            	     
+            	        puerto.escribirMensaje(document);
+
+            	    } catch (Exception ex) {
+            	        // Manejo de errores
+            	        Logger.getLogger(ConectorDB.class.getName()).log(Level.SEVERE, null, ex);
+            	    }
+            	}
             } else {
                 System.out.println("No se encontraron consultas en el mensaje");
-                // Manejar la situación cuando no se encuentran nombres en el mensaje
             }
         }
     }
 
     private String[] extraerConsulta(Document document, String xpathConsulta) {
         try {
-            NodeList nodeList = document.getElementsByTagName(xpathConsulta);
+            XPathFactory xpathFactory = XPathFactory.newInstance();
+            XPath xpath = xpathFactory.newXPath();
+            XPathExpression expr = xpath.compile(xpathConsulta);
+            NodeList nodeList = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
+            
             String[] names = new String[nodeList.getLength()];
 
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Element element = (Element) nodeList.item(i);
                 names[i] = element.getTextContent();
+
             }
 
             return names;
-        } catch (Exception ex) {
+        } catch (XPathExpressionException ex) {
             ex.printStackTrace();
         }
         return null;
     }
 
     private boolean consultarDisponibilidadEnBaseDeDatos(String consulta) {
+       
+        if (consulta == null || consulta.trim().isEmpty()) {
+            System.out.println("Consulta SQL vacía o nula");
+            return false;
+        }
+
 
         try (PreparedStatement stmt = connection.prepareStatement(consulta)) {
             ResultSet rs = stmt.executeQuery();
 
+           
             if (rs.next()) {
-                int stock = rs.getInt("Stock");
-
+              
+                int stock = rs.getInt("stock");  
+               
                 return stock > 0;
+            } else {
+               
+              
             }
         } catch (SQLException e) {
+           
+            System.err.println("Error al ejecutar la consulta: " + e.getMessage());
             e.printStackTrace();
         }
+
         return false;
     }
-
 }
+

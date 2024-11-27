@@ -28,8 +28,8 @@ public class Translator extends Task {
 
         List<Mensaje> mensajes = entrada.getListaMensajes();
 
-        for (Mensaje m : mensajes) {
-
+        for (Mensaje men : mensajes) {
+        	Mensaje m = new Mensaje(men);
             Document resultado = transformer.aplicarXslt(m.getContenido(), xsltFilePath);
             m.setContenido(resultado);
             salida.setMensaje(m);

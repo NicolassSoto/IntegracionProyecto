@@ -2,12 +2,15 @@ package resources;
 
 import java.io.StringWriter;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 public class Mensaje {
 
@@ -126,4 +129,45 @@ public class Mensaje {
 
         return sb.toString();
     }
+    
+    
+    public Mensaje(Mensaje otroMensaje) {
+    	this.idMensaje = String.valueOf(++contador);
+        this.idMensajeCorrelacion = otroMensaje.idMensajeCorrelacion;
+        this.idConjunto = otroMensaje.idConjunto;
+        this.posicionEnConjunto = otroMensaje.posicionEnConjunto;
+        this.nMensajesEnConjunto = otroMensaje.nMensajesEnConjunto;
+
+        // Crear copias profundas de los documentos 'original' y 'contenido'
+        this.original = otroMensaje.getOriginal();
+        this.contenido = copiarDocumento(otroMensaje.contenido);
+    }
+    
+    public static Document copiarDocumento(Document original) {
+    	
+    	if(original == null) {
+    		return null;
+    	}
+        try {
+            // Crear un nuevo DocumentBuilderFactory y DocumentBuilder
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            
+            // Crear un nuevo Document vacío
+            Document copy = builder.newDocument();
+
+            // Clonar el nodo raíz del documento original (deep copy)
+            Node rootNode = original.getDocumentElement();
+            Node clonedNode = rootNode.cloneNode(true);
+
+            // Importar el nodo clonado al nuevo documento
+            copy.appendChild(copy.importNode(clonedNode, true));
+
+            return copy;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
 }
