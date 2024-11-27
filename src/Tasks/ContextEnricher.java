@@ -9,14 +9,14 @@ import resources.XmlTransformer;
 
 public class ContextEnricher extends Task {
 
-    private List <Slot> entrada;    // Mensaje de entrada en XML
+    private Slot entrada;    // Mensaje de entrada en XML
     private Slot contexto;   // Información de contexto en XML
     private Slot salida;     // Salida para el mensaje enriquecido en XML
     private XmlTransformer transformer;
 
     // Constructor que inicializa las entradas y la salida
-    public ContextEnricher(List<Slot> mensaje, Slot contexto, Slot salida, XmlTransformer transformer) {
-        this.entrada = mensaje;
+    public ContextEnricher(Slot entrada, Slot contexto, Slot salida, XmlTransformer transformer) {
+        this.entrada = entrada;
         this.contexto = contexto;
         this.salida = salida;
         this.transformer = transformer;
@@ -30,14 +30,17 @@ public class ContextEnricher extends Task {
     public void run() {
         try {
 
-            Mensaje mensaje = entrada.getFirst().desencolar();
-
-            Document contenidoEnriquecido = transformer.enriquecerMensajeConContexto(mensaje.getContenido(), contexto.desencolar().getContenido());
-
-            mensaje.setContenido(contenidoEnriquecido);
-
-            salida.setMensaje(mensaje);
-
+        	List<Mensaje> mensajes = entrada.getListaMensajes();
+        	List<Mensaje> contextos = contexto.getListaMensajes();
+        	
+            for(int i = 0; i < mensajes.size(); i++) {
+            	Mensaje m = mensajes.get(i);
+            	Document contenidoEnriquecido = transformer.enriquecerMensajeConContexto(m.getContenido(), contextos.get(i).getContenido());
+            	m.setContenido(contenidoEnriquecido);
+            	salida.setMensaje(m);
+            }
+        	
+        
         } catch (Exception e) {
             System.out.println("Error al procesar el mensaje XML: " + e.getMessage());
             e.printStackTrace();

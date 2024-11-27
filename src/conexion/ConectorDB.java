@@ -12,16 +12,16 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import resources.DatabaseConnection;
+import resources.DatabaseManager;
 
 public class ConectorDB extends Conector {
 
     private Connection connection;
 
-    public ConectorDB(Puerto puerto) {
+    public ConectorDB(Puerto puerto, Connection con) {
         super(puerto);
 
-        this.connection = new DatabaseConnection().connect();
+        this.connection = con;
     }
 
     public void serveDrinks() {

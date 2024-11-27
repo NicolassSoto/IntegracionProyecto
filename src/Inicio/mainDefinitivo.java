@@ -8,6 +8,7 @@ import conexion.PuertoEntrada;
 import conexion.PuertoSalida;
 import conexion.PuertoSolicitud;
 import conexion.Slot;
+import resources.DatabaseManager;
 import resources.Mensaje;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -22,7 +23,7 @@ public class mainDefinitivo {
     public static void main(String[] args) throws Exception {
 
         //Necesarios
-        String file = "ruta/al/archivo.xml";
+        String file = "./order5.xml";
         XmlTransformer transformerCold = null;
         XmlTransformer transformerHot = null;
         String tagSplitter = "drink";
@@ -32,6 +33,11 @@ public class mainDefinitivo {
         expresiones.add("//drink[type='cold']"); // Expresión para drinks frías
         expresiones.add("//drink[type='hot']");  // Expresión para drinks calientes
 
+        //Base de datos
+        DatabaseManager DB = new DatabaseManager();
+        DB.initializeDatabase();
+        
+        
         //Slots para la comunicación entre tareas
         //Splitter
         Slot splitterInput = new Slot();
@@ -100,8 +106,8 @@ public class mainDefinitivo {
         
         //CONECTORES
         ConectorEntrada conectorEntrada = new ConectorEntrada(pEntrada, file);
-        ConectorDB conectorHot = new ConectorDB(pSolHot);
-        ConectorDB conectorCold = new ConectorDB(pSolCold);
+        ConectorDB conectorHot = new ConectorDB(pSolHot, DB.getConnection());
+        ConectorDB conectorCold = new ConectorDB(pSolCold, DB.getConnection());
         ConectorSalida conectorSalida = new ConectorSalida(pSalida, file);
         
         //CONEXIÓN ENTRE TAREAS
@@ -120,15 +126,12 @@ public class mainDefinitivo {
         Correlator correlatorCold = new Correlator(replicatorColdOutput, correlatorColdOutput);
         Correlator correlatorHot = new Correlator(replicatorHotOutput, correlatorHotInput);
 
-        ContextEnricher enricherCold = new ContextEnricher(correlatorColdOutput, enricherColdContext, salidaIdSetter, transformerCold);
+        ContextEnricher enricherCold = new ContextEnricher(correlatorColdOutput.get(0), enricherColdContext, salidaIdSetter, transformerCold);
         ContextEnricher enricherHot = new ContextEnricher(correlatorColdOutput, enricherColdContext, salidaIdSetter, transformerHot);
 
         Merger merger = new Merger(mergerInput, mergerOutput);
 
         Aggregator aggregator = new Aggregator(mergerOutput, aggregatorOutput, tagAggregator);
-
-        Mensaje mensaje = crearMensajeDesdeXML(file);
-        splitterInput.setMensaje(mensaje);
 
         splitter.run();
         idSetter.run();
