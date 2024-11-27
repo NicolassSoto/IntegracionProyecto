@@ -1,5 +1,12 @@
 package resources;
 
+import java.io.StringWriter;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.w3c.dom.Document;
 
 public class Mensaje {
@@ -12,12 +19,13 @@ public class Mensaje {
     private int posicionEnConjunto;
     private Document original;
     int nMensajesEnConjunto;
+    
 
     //CUERPO
     private Document contenido;
 
     public Mensaje() {
-
+    	this.idMensaje = String.valueOf(++contador);
     }
 
     public Mensaje(String idMensaje, String idConjunto, int nMensajesEnConjunto, Document contenido) {
@@ -82,5 +90,40 @@ public class Mensaje {
 
     public void setContenido(Document contenido) {
         this.contenido = contenido;
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        boolean hayOriginal = false;
+        if(original != null) {
+        	hayOriginal = true;
+        }
+        
+        // Información adicional
+        sb.append("Mensaje: ").append(idMensaje).append("\n")
+          .append("Id de Correlación: ").append(idMensajeCorrelacion).append("\n")
+          .append("Id del Conjunto: ").append(idConjunto).append("\n")
+          .append("Posición en Conjunto: ").append(posicionEnConjunto).append("\n")
+          .append("Número de Mensajes en Conjunto: ").append(nMensajesEnConjunto).append("\n")
+          .append("Original: ").append(hayOriginal).append("\n");
+
+        // Convertir contenido a String
+        if (contenido != null) {
+            try {
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
+                StringWriter writer = new StringWriter();
+                transformer.transform(new DOMSource(contenido), new StreamResult(writer));
+                sb.append("Contenido del Documento: \n").append(writer.toString());
+            } catch (Exception e) {
+                sb.append("Error al transformar el contenido del documento: ").append(e.getMessage());
+            }
+        } else {
+            sb.append("Contenido del Documento: [VACÍO]");
+        }
+
+        return sb.toString();
     }
 }

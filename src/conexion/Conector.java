@@ -4,8 +4,8 @@ import resources.XmlTransformer;
 
 public abstract class Conector {
 
-    private Puerto puerto;
-    private String fichero;
+    public Puerto puerto;
+    public String fichero;
     
     public XmlTransformer transformer = new XmlTransformer();
     

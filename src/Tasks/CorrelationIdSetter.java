@@ -25,9 +25,9 @@ public class CorrelationIdSetter extends Task {
     public void run() {
 
         List<Mensaje> mensajes = entrada.getListaMensajes();
-
+        
         for (Mensaje m : mensajes) {
-            m.setIdMensaje(generateID());
+            m.setIdMensajeCorrelacion(generateID());
             salida.setMensaje(m);
         }
     }

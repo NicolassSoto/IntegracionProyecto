@@ -15,11 +15,11 @@ public class ContextEnricher extends Task {
     private XmlTransformer transformer;
 
     // Constructor que inicializa las entradas y la salida
-    public ContextEnricher(Slot entrada, Slot contexto, Slot salida, XmlTransformer transformer) {
+    public ContextEnricher(Slot entrada, Slot contexto, Slot salida) {
         this.entrada = entrada;
         this.contexto = contexto;
         this.salida = salida;
-        this.transformer = transformer;
+        this.transformer = new XmlTransformer();
     }
 
     public ContextEnricher() {
@@ -34,10 +34,10 @@ public class ContextEnricher extends Task {
         	List<Mensaje> contextos = contexto.getListaMensajes();
         	
             for(int i = 0; i < mensajes.size(); i++) {
-            	Mensaje m = mensajes.get(i);
-            	Document contenidoEnriquecido = transformer.enriquecerMensajeConContexto(m.getContenido(), contextos.get(i).getContenido());
-            	m.setContenido(contenidoEnriquecido);
-            	salida.setMensaje(m);
+            	
+            	Document contenidoEnriquecido = transformer.enriquecerMensajeConContexto(mensajes.get(i).getContenido(), contextos.get(i).getContenido());
+            	mensajes.get(i).setContenido(contenidoEnriquecido);
+            	salida.setMensaje(mensajes.get(i));
             }
         	
         

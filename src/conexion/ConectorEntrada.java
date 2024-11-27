@@ -1,8 +1,17 @@
 package conexion;
 
 import java.util.logging.Level;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.StringReader;
 import java.util.logging.Logger;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
 public class ConectorEntrada extends Conector {
 
@@ -10,13 +19,42 @@ public class ConectorEntrada extends Conector {
         super(p, f);
     }
 
-    public void leerComandas() {
-        try {
-            Document document = transformer.stringToDocument(getFichero());
+    public void readFolder() {
+    	 // Crear un objeto File para representar la carpeta
+        File carpeta = new File(fichero);
+        
+        // Verificar si la carpeta existe y es un directorio
+        if (carpeta.exists() && carpeta.isDirectory()) {
+            // Obtener la lista de archivos en la carpeta
+            File[] archivos = carpeta.listFiles((dir, name) -> name.endsWith(".xml"));
             
-            getPuerto().escribirMensaje(document);
-        } catch (Exception ex) {
-            Logger.getLogger(ConectorEntrada.class.getName()).log(Level.SEVERE, null, ex);
+            if (archivos != null) {
+                for (File archivo : archivos) {
+                    try {
+                        // Procesar cada archivo XML
+                        Document document = convertirXMLaDocumento(archivo);
+                        // Enviar el documento por el puerto
+                        puerto.escribirMensaje(document);
+                    } catch (Exception e) {
+                        // Manejar excepciones, como errores al procesar el archivo XML
+                        System.err.println("Error al procesar el archivo: " + archivo.getName());
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                System.err.println("No se pudo leer los archivos en la carpeta.");
+            }
+        } else {
+            System.err.println("La carpeta especificada no existe o no es un directorio.");
         }
+    }
+    
+    private Document convertirXMLaDocumento(File archivo) throws Exception {
+        // Crear un DocumentBuilderFactory y un DocumentBuilder
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        
+        // Leer el archivo XML y convertirlo a un objeto Document
+        return builder.parse(archivo);
     }
 }

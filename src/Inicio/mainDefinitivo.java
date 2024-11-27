@@ -23,7 +23,7 @@ public class mainDefinitivo {
     public static void main(String[] args) throws Exception {
 
         //Necesarios
-        String file = "./order5.xml";
+        String file = "src/InputFolder";
         XmlTransformer transformerCold = null;
         XmlTransformer transformerHot = null;
         String tagSplitter = "drink";
@@ -128,33 +128,49 @@ public class mainDefinitivo {
         Correlator correlatorCold = new Correlator(replicatorColdOutput, correlatorColdOutput);
         Correlator correlatorHot = new Correlator(replicatorHotOutput, correlatorHotInput);
 
-        ContextEnricher enricherCold = new ContextEnricher(correlatorColdOutput1, correlatorColdInput2, enricherColdOutput, transformerCold);
-        ContextEnricher enricherHot = new ContextEnricher(correlatorHotOutput1, correlatorHotOutput2, enricherHotOutput, transformerHot);
+        ContextEnricher enricherCold = new ContextEnricher(correlatorColdOutput1, correlatorColdInput2, enricherColdOutput);
+        ContextEnricher enricherHot = new ContextEnricher(correlatorHotOutput1, correlatorHotOutput2, enricherHotOutput);
 
        
         Merger merger = new Merger(mergerInput, mergerOutput);
 
         Aggregator aggregator = new Aggregator(mergerOutput, aggregatorOutput, tagAggregator);
 
-        splitter.run();
+        conectorEntrada.readFolder();
+        
+        splitter.run();  
+        
         idSetter.run();
         distributor.run();
-        replicatorCold.run();
-        replicatorHot.run();
-        translatorCold.run();
-        translatorHot.run();
-        correlatorCold.run();
-        correlatorHot.run();
-        enricherCold.run();
-        enricherHot.run();
-        merger.run();
-        aggregator.run();
-
-        List<Mensaje> resultadoFinal = aggregatorOutput.getListaMensajes();
-        for (Mensaje m : resultadoFinal) {
-        	
-            System.out.println(m.toString());  // Muestra el mensaje enriquecido
-        }
+       
+       List<Mensaje> resultado = distributorColdOutput.getListaMensajes();
+       System.out.println( "SALIDA FRIA" + resultado.size());
+       
+       for (Mensaje m : resultado) {
+       	System.out.println("-----------------------------\n");
+           System.out.println(m.toString());  // Muestra el mensaje enriquecido
+       }
+       
+       List<Mensaje> resultado2 = distributorHotOutput.getListaMensajes();
+       System.out.println( "SALIDA CALIENTE" + resultado2.size());
+       
+       
+//        replicatorCold.run();
+//        replicatorHot.run();
+//        translatorCold.run();
+//        translatorHot.run();
+//        correlatorCold.run();
+//        correlatorHot.run();
+//        enricherCold.run();
+//        enricherHot.run();
+//        merger.run();
+//        aggregator.run();
+//
+//        List<Mensaje> resultadoFinal = aggregatorOutput.getListaMensajes();
+//        for (Mensaje m : resultadoFinal) {
+//        	
+//            System.out.println(m.toString());  // Muestra el mensaje enriquecido
+//        }
     }
 
     // Método para crear un Mensaje desde una cadena XML

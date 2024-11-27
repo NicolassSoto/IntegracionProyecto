@@ -55,18 +55,14 @@ public class XmlTransformer {
 		
 		NodeList nodes = originalDoc.getElementsByTagName(tagName);
 
-		for (int i = nodes.getLength() - 1; i >= 0; i--) {
-			Node node = nodes.item(i);
-
-			// Eliminar el nodo del documento
-			Node parent = node.getParentNode();
-			if (parent != null) {
-				parent.removeChild(node);
-			}
-		}
+	
+		
+		
 
 		int nNodos = nodes.getLength();
 
+		
+		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 
@@ -87,14 +83,21 @@ public class XmlTransformer {
 			m.setnMensajesEnConjunto(nNodos);
 			m.setPosicionEnConjunto(i);
 			m.setContenido(newDoc);
-
-			if (i == nNodos - 1) {
-				m.setOriginal(originalDoc);
-			}
-
 			messageList.add(m);
 
 		}
+		
+		for (int i = nodes.getLength() - 1; i >= 0; i--) {
+			Node node = nodes.item(i);
+
+			// Eliminar el nodo del documento
+			Node parent = node.getParentNode();
+			if (parent != null) {
+				parent.removeChild(node);
+			}
+		}
+		
+		messageList.get(0).setOriginal(originalDoc);
 
 		return messageList;
 

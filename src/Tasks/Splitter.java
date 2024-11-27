@@ -33,19 +33,22 @@ public class Splitter extends Task {
         this.entrada = entrada;
         this.salida = splitterOutput;
         this.splitTag = splitTag;
+        this.transformer = new XmlTransformer();
     }
     
     public void run() {
 
         List<Mensaje> mensajes = entrada.getListaMensajes();
-
+        
         for (Mensaje mensaje : mensajes) {
 
             try {
+            	
                 List<Mensaje> messageList = transformer.splitXmlMessage(mensaje, splitTag);
                 
                 for(Mensaje m : messageList) {
                 	salida.setMensaje(m);
+                	
                 }
                 
                 
