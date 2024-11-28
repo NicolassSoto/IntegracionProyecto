@@ -75,14 +75,8 @@ public class XmlTransformer {
 		
 		NodeList nodes = originalDoc.getElementsByTagName(tagName);
 
-	
-		
-		
-
 		int nNodos = nodes.getLength();
 
-		
-		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 

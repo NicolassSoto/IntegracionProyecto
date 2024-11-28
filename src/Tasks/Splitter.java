@@ -43,7 +43,7 @@ public class Splitter extends Task {
         for (Mensaje mensaje : mensajes) {
 
             try {
-            	
+            	System.out.println("COMANDA: " + mensaje.toString());
                 List<Mensaje> messageList = transformer.splitXmlMessage(mensaje, splitTag);
                 
                 for(Mensaje m : messageList) {

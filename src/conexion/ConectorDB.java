@@ -46,25 +46,23 @@ public class ConectorDB {
             if (consultas != null && consultas.length > 0) {
             	for (String consulta : consultas) {
             	    try {
-            	        // Verifica la disponibilidad en la base de datos
-            	        boolean disponible = consultarDisponibilidadEnBaseDeDatos(consulta);
+            	        
+            	        ResultSet resultado = consultarBaseDeDatos(consulta);
 
             	        // Crear un nuevo DocumentBuilder para construir el documento XML
             	        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             	        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             	        Document document = documentBuilder.newDocument();
 
+            	        //DAR RESULTSET GENERICO
             	     
-            	        Element stockElement = document.createElement("stock");
+            	        Element rsElemnt = document.createElement("rs");
+            	        Element rowElement = document.createElement("row");
 
-            	        if (disponible) {
-            	            
-            	            stockElement.setTextContent("si");
-            	        } else {
-            	           
-            	            stockElement.setTextContent("no");
-            	        }
-
+            	       
+            	        
+            	        for(int i = 1; i< resultado.get)
+            	        resultado.getArray(1);
             	      
             	        document.appendChild(stockElement);
 
@@ -104,34 +102,27 @@ public class ConectorDB {
         return null;
     }
 
-    private boolean consultarDisponibilidadEnBaseDeDatos(String consulta) {
+    private ResultSet consultarBaseDeDatos(String consulta) {
        
         if (consulta == null || consulta.trim().isEmpty()) {
             System.out.println("Consulta SQL vacía o nula");
-            return false;
+            return null;
         }
 
 
         try (PreparedStatement stmt = connection.prepareStatement(consulta)) {
             ResultSet rs = stmt.executeQuery();
 
-           
-            if (rs.next()) {
-              
-                int stock = rs.getInt("stock");  
-               
-                return stock > 0;
-            } else {
-               
-              
-            }
+             return rs;
+          
+         
         } catch (SQLException e) {
            
             System.err.println("Error al ejecutar la consulta: " + e.getMessage());
             e.printStackTrace();
         }
 
-        return false;
+        return null;
     }
 }
 
