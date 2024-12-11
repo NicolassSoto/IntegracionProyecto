@@ -105,7 +105,7 @@ public class Mensaje {
         }
         
         // Información adicional
-        sb.append("Mensaje: ").append(idMensaje).append("\n")
+        sb.append("\nMensaje: ").append(idMensaje).append("\n")
           .append("Id de Correlación: ").append(idMensajeCorrelacion).append("\n")
           .append("Id del Conjunto: ").append(idConjunto).append("\n")
           .append("Posición en Conjunto: ").append(posicionEnConjunto).append("\n")

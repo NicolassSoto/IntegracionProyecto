@@ -4,7 +4,7 @@
    
     <xsl:template match="/drink">
         <query>
-           SELECT * FROM BEBIDA WHERE nombre = '<xsl:value-of select="name" />';
+           SELECT * FROM BEBIDA WHERE name = '<xsl:value-of select="name" />';
         </query>
     </xsl:template>
 </xsl:stylesheet>

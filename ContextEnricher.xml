@@ -1,0 +1,16 @@
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+    <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
+    
+    <xsl:template match="/">
+        <xsl:apply-templates select="//stock"/>
+    </xsl:template>
+    
+    <xsl:template match="stock">
+    <stock>
+        <xsl:choose>
+            <xsl:when test="number(.) > 0">En stock</xsl:when>
+            <xsl:otherwise>Sin stock</xsl:otherwise>
+        </xsl:choose>
+    </stock>
+</xsl:template>
+</xsl:stylesheet>

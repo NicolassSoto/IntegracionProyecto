@@ -13,13 +13,15 @@ public class ContextEnricher extends Task {
     private Slot contexto;   // Información de contexto en XML
     private Slot salida;     // Salida para el mensaje enriquecido en XML
     private XmlTransformer transformer;
+    private String xsltFilePath;
 
     // Constructor que inicializa las entradas y la salida
-    public ContextEnricher(Slot entrada, Slot contexto, Slot salida) {
+    public ContextEnricher(Slot entrada, Slot contexto, Slot salida, String xsltFilePath) {
         this.entrada = entrada;
         this.contexto = contexto;
         this.salida = salida;
         this.transformer = new XmlTransformer();
+        this.xsltFilePath = xsltFilePath;
     }
 
     public ContextEnricher() {
@@ -29,15 +31,13 @@ public class ContextEnricher extends Task {
     @Override
     public void run() {
         try {
-
         	List<Mensaje> mensajes = entrada.getListaMensajes();
         	List<Mensaje> contextos = contexto.getListaMensajes();
         
             for(int i = 0; i < mensajes.size(); i++) {
             	Mensaje m = mensajes.get(i);
             	Mensaje context = contextos.get(i);
-            	
-            	Document contenidoEnriquecido = transformer.combinarDocumentos(m.getContenido(), context.getContenido());
+            	Document contenidoEnriquecido = transformer.combinarDocumentos(m.getContenido(), transformer.aplicarXslt(context.getContenido(), xsltFilePath));
             	m.setContenido(contenidoEnriquecido);
             	salida.setMensaje(m);
             }

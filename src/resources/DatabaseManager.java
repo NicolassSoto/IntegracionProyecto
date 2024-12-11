@@ -7,12 +7,12 @@ import java.sql.Statement;
 
 public class DatabaseManager {
 
-	private Connection connection;
+    private Connection connection;
 
     /**
      * Inicializa la base de datos en memoria y crea la estructura necesaria.
      */
-	public void initializeDatabase() {
+    public void initializeDatabase() {
         String jdbcUrl = "jdbc:h2:mem:testdb"; // Base de datos en memoria
         String user = "sa";
         String password = "";
@@ -27,7 +27,7 @@ public class DatabaseManager {
                 String createTableSQL = """
                     CREATE TABLE BEBIDA (
                         id INT AUTO_INCREMENT PRIMARY KEY,
-                        nombre VARCHAR(50) NOT NULL,
+                        name VARCHAR(50) NOT NULL,
                         stock INT NOT NULL
                     );
                 """;
@@ -36,13 +36,15 @@ public class DatabaseManager {
                 System.out.println("Tabla BEBIDA creada exitosamente.");
 
                 String insertDataSQL = """
-                    INSERT INTO BEBIDA (nombre, stock) VALUES 
+                    INSERT INTO BEBIDA (name, stock) VALUES 
                     ('te', 0),
                     ('agua', 50),
                     ('coca-cola', 30),
                     ('guarana', 15),
                     ('fanta', 25),
-                    ('tonica', 10);
+                    ('tonica', 10),
+                    ('tila', 0),
+                    ('cerveza', 25);
                 """;
 
                 statement.execute(insertDataSQL);
@@ -76,5 +78,5 @@ public class DatabaseManager {
             }
         }
     }
-	
+
 }

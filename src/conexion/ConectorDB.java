@@ -56,14 +56,15 @@ public class ConectorDB {
 
                         //DAR RESULTSET GENERICO
                         Element rsElemnt = document.createElement("rs");
-                        Element rowElement = document.createElement("row");
+                        
 
                         while (rs.next()) {
+                            Element rowElement = document.createElement("row");
                             // Iterar sobre las columnas de cada fila
                             for (int i = 1; i <= columnCount; i++) {
-                                String columnName = metaData.getColumnName(i); // Nombre de la columna
+                                String columnName = metaData.getColumnName(i).toLowerCase(); // Nombre de la columna
                                 Element column = document.createElement(columnName);
-                                String value = (String) rs.getObject(i); // Valor de la columna
+                                String value =  rs.getObject(i).toString(); // Valor de la columna
                                 column.setTextContent(value);
                                 rowElement.appendChild(column);
                             }
@@ -107,23 +108,19 @@ public class ConectorDB {
     }
 
     private ResultSet consultarBaseDeDatos(String consulta) {
-
-        if (consulta == null || consulta.trim().isEmpty()) {
-            System.out.println("Consulta SQL vacía o nula");
-            return null;
-        }
-
-        try (PreparedStatement stmt = connection.prepareStatement(consulta)) {
-            ResultSet rs = stmt.executeQuery();
-
-            return rs;
-
-        } catch (SQLException e) {
-
-            System.err.println("Error al ejecutar la consulta: " + e.getMessage());
-            e.printStackTrace();
-        }
-
+    if (consulta == null || consulta.trim().isEmpty()) {
+        System.out.println("Consulta SQL vacía o nula");
         return null;
     }
+
+    try {
+        PreparedStatement stmt = connection.prepareStatement(consulta);
+        return stmt.executeQuery();
+    } catch (SQLException e) {
+        System.err.println("Error al ejecutar la consulta: " + e.getMessage());
+        e.printStackTrace();
+    }
+
+    return null;
+}
 }

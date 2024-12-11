@@ -1,12 +1,6 @@
 package resources;
 
 import javax.xml.transform.*;
-
-import javax.xml.transform.dom.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.dom.DOMResult;
-
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -20,8 +14,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import org.xml.sax.InputSource;
 import javax.xml.transform.Transformer;
@@ -29,222 +21,227 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import javax.xml.transform.stream.*;
-import org.w3c.dom.*;
-import javax.xml.parsers.*;
-import java.io.*;
 
 public class XmlTransformer {
 
-	public XmlTransformer() {
+    public XmlTransformer() {
 
-	}
+    }
 
-	 public Document aplicarXslt(Document inputDoc, String xsltFilePath) throws Exception {
-		// Crear un objeto Source para el XML de entrada
-		    DOMSource xmlSource = new DOMSource(inputDoc);
-		
-		    File xsltFile = new File(xsltFilePath);
-		    StreamSource xsltSource = new StreamSource(xsltFile);
-		     
-		    StringWriter transformedXML = new StringWriter();
-		    StreamResult result = new StreamResult(transformedXML);
-		    
-		
-		    TransformerFactory transformerFactory = TransformerFactory.newInstance();
-		    Transformer transformer = transformerFactory.newTransformer(xsltSource);
-		    
-	
-		    transformer.transform(xmlSource, result);
-		    
-	
-		    InputSource inputSource = new InputSource(new StringReader(transformedXML.toString()));
-		    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		    DocumentBuilder db = dbf.newDocumentBuilder();
-		    
-		   
-		    return db.parse(inputSource);
-	    }
+    public Document aplicarXslt(Document inputDoc, String xsltFilePath) throws Exception {
+        // Crear un objeto Source para el XML de entrada
+        DOMSource xmlSource = new DOMSource(inputDoc);
 
-	// Método para dividir un mensaje XML en múltiples Documents según la etiqueta
-	// de elemento
-	public List<Mensaje> splitXmlMessage(Mensaje originalMes, String tagName) throws ParserConfigurationException {
+        File xsltFile = new File(xsltFilePath);
+        StreamSource xsltSource = new StreamSource(xsltFile);
 
-	
-		Document originalDoc = originalMes.getContenido();
-		
-		NodeList nodes = originalDoc.getElementsByTagName(tagName);
+        StringWriter transformedXML = new StringWriter();
+        StreamResult result = new StreamResult(transformedXML);
 
-		int nNodos = nodes.getLength();
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer(xsltSource);
 
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = factory.newDocumentBuilder();
+        transformer.transform(xmlSource, result);
 
-		List<Mensaje> messageList = new ArrayList<>();
+        InputSource inputSource = new InputSource(new StringReader(transformedXML.toString()));
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
 
-		for (int i = 0; i < nNodos; i++) {
+        return db.parse(inputSource);
+    }
 
-			Node node = nodes.item(i);
+    // Método para dividir un mensaje XML en múltiples Documents según la etiqueta
+    // de elemento
+    public List<Mensaje> splitXmlMessage(Mensaje originalMes, String tagName) throws ParserConfigurationException {
 
-			Document newDoc = builder.newDocument();
+        Document originalDoc = originalMes.getContenido();
 
-			Node importedNode = newDoc.importNode(node, true);
-			newDoc.appendChild(importedNode);
+        NodeList nodes = originalDoc.getElementsByTagName(tagName);
 
-			Mensaje m = new Mensaje();
+        int nNodos = nodes.getLength();
 
-			 m.setIdConjunto(originalMes.getIdMensaje());
-			m.setnMensajesEnConjunto(nNodos);
-			m.setPosicionEnConjunto(i);
-			m.setContenido(newDoc);
-			messageList.add(m);
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
 
-		}
-		
-		for (int i = nodes.getLength() - 1; i >= 0; i--) {
-			Node node = nodes.item(i);
+        List<Mensaje> messageList = new ArrayList<>();
 
-			// Eliminar el nodo del documento
-			Node parent = node.getParentNode();
-			if (parent != null) {
-				parent.removeChild(node);
-			}
-		}
-		
-		messageList.get(0).setOriginal(originalDoc);
+        for (int i = 0; i < nNodos; i++) {
 
-		return messageList;
+            Node node = nodes.item(i);
 
-	}
+            Document newDoc = builder.newDocument();
 
-	// Convertir un Document a String
-	public String documentToString(Document doc) throws TransformerException {
-		TransformerFactory tf = TransformerFactory.newInstance();
-		Transformer transformer = tf.newTransformer();
-		StringWriter writer = new StringWriter();
-		transformer.transform(new javax.xml.transform.dom.DOMSource(doc),
-				new javax.xml.transform.stream.StreamResult(writer));
-		return writer.getBuffer().toString();
-	}
+            Node importedNode = newDoc.importNode(node, true);
+            newDoc.appendChild(importedNode);
 
-	public static Document combinarConjunto(List<Mensaje> conjunto, String tag) throws Exception {
-	    conjunto.sort(Comparator.comparingInt(Mensaje::getPosicionEnConjunto));
+            Mensaje m = new Mensaje();
 
-	    Document originalDoc = conjunto.get(0).getOriginal();
-	    NodeList destinoList = originalDoc.getElementsByTagName(tag);
-	    if (destinoList.getLength() == 0) {
-	        throw new Exception("El nodo destino '" + tag + "' no existe en el documento.");
-	    }
+            m.setIdConjunto(originalMes.getIdMensaje());
+            m.setnMensajesEnConjunto(nNodos);
+            m.setPosicionEnConjunto(i);
+            m.setContenido(newDoc);
+            messageList.add(m);
 
-	    Node nodoDestinoElement = destinoList.item(0);
-	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	    DocumentBuilder builder = factory.newDocumentBuilder();
+        }
 
-	    for (Mensaje mensaje : conjunto) {
-	        Document contenido = mensaje.getContenido();
-	        Node rootNode = contenido.getDocumentElement();
-	        Node importedNode = originalDoc.importNode(rootNode, true);
-	        nodoDestinoElement.appendChild(importedNode);
-	    }
+        for (int i = nodes.getLength() - 1; i >= 0; i--) {
+            Node node = nodes.item(i);
 
-	    return originalDoc;
-	}
+            // Eliminar el nodo del documento
+            Node parent = node.getParentNode();
+            if (parent != null) {
+                parent.removeChild(node);
+            }
+        }
 
-	
+        messageList.get(0).setOriginal(originalDoc);
 
-	// Convertir un String a Document
-	public Document stringToDocument(String xmlStr) throws Exception {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		return builder.parse(new InputSource(new StringReader(xmlStr)));
-	}
+        return messageList;
 
-	public static List<String> segmentXmlByTag(String xmlInput, String tagName) {
-		List<String> segments = new ArrayList<>();
+    }
 
-		// Crear una etiqueta de cierre correspondiente
-		String closingTag = "</" + tagName.substring(1); // Obtener el nombre de la etiqueta sin "<" y agregar "</"
+    // Convertir un Document a String
+    public String documentToString(Document doc) throws TransformerException {
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer = tf.newTransformer();
+        StringWriter writer = new StringWriter();
+        transformer.transform(new javax.xml.transform.dom.DOMSource(doc),
+                new javax.xml.transform.stream.StreamResult(writer));
+        return writer.getBuffer().toString();
+    }
 
-		// Dividir el string de entrada basado en la etiqueta de cierre
-		String[] splitSegments = xmlInput.split(closingTag);
+    public static Document combinarConjunto(List<Mensaje> conjunto, String tag) throws Exception {
+        conjunto.sort(Comparator.comparingInt(Mensaje::getPosicionEnConjunto));
 
-		for (String segment : splitSegments) {
-			// Asegurarse de que el segmento no esté vacío y agregar la etiqueta de cierre
-			if (!segment.trim().isEmpty()) {
-				segments.add(segment.trim() + closingTag);
-			}
-		}
+        Document originalDoc = conjunto.get(0).getOriginal();
+        NodeList destinoList = originalDoc.getElementsByTagName(tag);
+        if (destinoList.getLength() == 0) {
+            throw new Exception("El nodo destino '" + tag + "' no existe en el documento.");
+        }
 
-		return segments;
-	}
+        Node nodoDestinoElement = destinoList.item(0);
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
 
-	public Document convertirFormato(Document contenido, String tipo)
-			throws IllegalArgumentException, ParserConfigurationException {
-		if ("SQL".equalsIgnoreCase(tipo)) {
-			return convertirAConsultaSQL(contenido);
-		} else {
-			throw new IllegalArgumentException("Tipo de formato no soportado: " + tipo);
-		}
-	}
+        for (Mensaje mensaje : conjunto) {
+            Document contenido = mensaje.getContenido();
+            Node rootNode = contenido.getDocumentElement();
+            Node importedNode = originalDoc.importNode(rootNode, true);
+            nodoDestinoElement.appendChild(importedNode);
+        }
 
-	// Convertir Document a una consulta SQL
-	private Document convertirAConsultaSQL(Document document) throws ParserConfigurationException {
-		// Suponemos que el XML tiene un elemento <registro> con subelementos <id>,
-		// <nombre>, <email>
-		Element root = document.getDocumentElement();
+        return originalDoc;
+    }
 
-		String id = getElementValue(root, "id");
-		String tipo = getElementValue(root, "tipo");
-		String stock = getElementValue(root, "stock");
+    // Convertir un String a Document
+    public Document stringToDocument(String xmlStr) throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        return builder.parse(new InputSource(new StringReader(xmlStr)));
+    }
 
-		// Creamos un nuevo documento para la consulta SQL
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		Document sqlDoc = builder.newDocument();
+    public static List<String> segmentXmlByTag(String xmlInput, String tagName) {
+        List<String> segments = new ArrayList<>();
 
-		// Creamos el elemento raíz <consulta>
-		Element consultaElement = sqlDoc.createElement("consulta");
+        // Crear una etiqueta de cierre correspondiente
+        String closingTag = "</" + tagName.substring(1); // Obtener el nombre de la etiqueta sin "<" y agregar "</"
 
-		// Creamos el subelemento <sql> con la consulta formateada
-		Element sqlElement = sqlDoc.createElement("sql");
-		String sqlQuery = String.format("INSERT INTO usuarios (id, tipo, stock) VALUES (%s, '%s', '%s');", id, tipo,
-				stock);
-		sqlElement.appendChild(sqlDoc.createTextNode(sqlQuery));
+        // Dividir el string de entrada basado en la etiqueta de cierre
+        String[] splitSegments = xmlInput.split(closingTag);
 
-		// Añadimos el subelemento <sql> al elemento raíz
-		consultaElement.appendChild(sqlElement);
+        for (String segment : splitSegments) {
+            // Asegurarse de que el segmento no esté vacío y agregar la etiqueta de cierre
+            if (!segment.trim().isEmpty()) {
+                segments.add(segment.trim() + closingTag);
+            }
+        }
 
-		// Añadimos el elemento raíz <consulta> al documento
-		sqlDoc.appendChild(consultaElement);
+        return segments;
+    }
 
-		return sqlDoc;
-	}
+    public Document convertirFormato(Document contenido, String tipo)
+            throws IllegalArgumentException, ParserConfigurationException {
+        if ("SQL".equalsIgnoreCase(tipo)) {
+            return convertirAConsultaSQL(contenido);
+        } else {
+            throw new IllegalArgumentException("Tipo de formato no soportado: " + tipo);
+        }
+    }
 
-	// Método auxiliar para obtener el valor de un elemento XML
-	private String getElementValue(Element parent, String tagName) {
-		Element element = (Element) parent.getElementsByTagName(tagName).item(0);
-		return element != null ? element.getTextContent() : "";
-	}
+    // Convertir Document a una consulta SQL
+    private Document convertirAConsultaSQL(Document document) throws ParserConfigurationException {
+        // Suponemos que el XML tiene un elemento <registro> con subelementos <id>,
+        // <nombre>, <email>
+        Element root = document.getDocumentElement();
 
-	// Método para enriquecer el mensaje base con el contexto
-	 public static Document combinarDocumentos(Document doc1, Document doc2) {
-	        try {
-	            // Obtener el nodo raíz del primer documento (el que contiene <drink>)
-	            Node rootNode1 = doc1.getDocumentElement();
+        String id = getElementValue(root, "id");
+        String tipo = getElementValue(root, "tipo");
+        String stock = getElementValue(root, "stock");
 
-	            // Obtener el nodo raíz del segundo documento (el que contiene <stock>)
-	            Node rootNode2 = doc2.getDocumentElement();
+        // Creamos un nuevo documento para la consulta SQL
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document sqlDoc = builder.newDocument();
 
-	            // Crear una copia del segundo nodo (el que contiene <stock>)
-	            Node clonedStockNode = doc1.importNode(rootNode2, true);
+        // Creamos el elemento raíz <consulta>
+        Element consultaElement = sqlDoc.createElement("consulta");
 
-	            // Agregar el nodo <stock> al nodo raíz del primer documento
-	            rootNode1.appendChild(clonedStockNode);
+        // Creamos el subelemento <sql> con la consulta formateada
+        Element sqlElement = sqlDoc.createElement("sql");
+        String sqlQuery = String.format("INSERT INTO usuarios (id, tipo, stock) VALUES (%s, '%s', '%s');", id, tipo,
+                stock);
+        sqlElement.appendChild(sqlDoc.createTextNode(sqlQuery));
 
-	            return doc1;  // Devolver el documento combinado
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	        return null;
-	    }
+        // Añadimos el subelemento <sql> al elemento raíz
+        consultaElement.appendChild(sqlElement);
+
+        // Añadimos el elemento raíz <consulta> al documento
+        sqlDoc.appendChild(consultaElement);
+
+        return sqlDoc;
+    }
+
+    // Método auxiliar para obtener el valor de un elemento XML
+    private String getElementValue(Element parent, String tagName) {
+        Element element = (Element) parent.getElementsByTagName(tagName).item(0);
+        return element != null ? element.getTextContent() : "";
+    }
+
+    // Método auxiliar para obtener el valor de un elemento XML en todo el documento
+    public String getElementValueFromDocument(Document document, String tagName) {
+        // Obtener todos los elementos con el tagName en el documento
+        NodeList nodes = document.getElementsByTagName(tagName);
+
+        if (nodes.getLength() > 0) {
+            // Obtener el primer nodo con el tagName
+            Node node = nodes.item(0);
+
+            if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
+                return node.getTextContent();
+            }
+        }
+        return ""; // Retornar una cadena vacía si no se encuentra el tag
+    }
+
+    // Método para enriquecer el mensaje base con el contexto
+    public static Document combinarDocumentos(Document doc1, Document doc2) {
+        try {
+            // Obtener el nodo raíz del primer documento (el que contiene <drink>)
+            Node rootNode1 = doc1.getDocumentElement();
+
+            // Obtener el nodo raíz del segundo documento (el que contiene <stock>)
+            Node rootNode2 = doc2.getDocumentElement();
+
+            // Crear una copia del segundo nodo (el que contiene <stock>)
+            Node clonedStockNode = doc1.importNode(rootNode2, true);
+
+            // Agregar el nodo <stock> al nodo raíz del primer documento
+            rootNode1.appendChild(clonedStockNode);
+
+            return doc1;  // Devolver el documento combinado
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

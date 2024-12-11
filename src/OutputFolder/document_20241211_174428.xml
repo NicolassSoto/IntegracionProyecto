@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<cafe_order>
+    <order_id>6</order_id>
+    <drinks>
+        <drink>
+            <name>te</name>
+            <type>hot</type>
+            <rs>
+                    
+                <row>
+                            
+                    <id>1</id>
+                            
+                    <name>te</name>
+                            
+                    <stock>Sin stock</stock>
+                        
+                </row>
+                
+            </rs>
+        </drink>
+        <drink>
+            <name>tila</name>
+            <type>hot</type>
+            <rs>
+                    
+                <row>
+                            
+                    <id>7</id>
+                            
+                    <name>tila</name>
+                            
+                    <stock>Sin stock</stock>
+                        
+                </row>
+                
+            </rs>
+        </drink>
+        <drink>
+            <name>coca-cola</name>
+            <type>cold</type>
+            <rs>
+                    
+                <row>
+                            
+                    <id>3</id>
+                            
+                    <name>coca-cola</name>
+                            
+                    <stock>En stock</stock>
+                        
+                </row>
+                
+            </rs>
+        </drink>
+        <drink>
+            <name>guarana</name>
+            <type>cold</type>
+            <rs>
+                    
+                <row>
+                            
+                    <id>4</id>
+                            
+                    <name>guarana</name>
+                            
+                    <stock>En stock</stock>
+                        
+                </row>
+                
+            </rs>
+        </drink>
+        <drink>
+            <name>cerveza</name>
+            <type>cold</type>
+            <rs>
+                    
+                <row>
+                            
+                    <id>8</id>
+                            
+                    <name>cerveza</name>
+                            
+                    <stock>En stock</stock>
+                        
+                </row>
+                
+            </rs>
+        </drink>
+    </drinks>
+</cafe_order>
