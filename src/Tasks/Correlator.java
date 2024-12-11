@@ -3,6 +3,12 @@ package Tasks;
 import java.util.Iterator;
 import java.util.List;
 import conexion.Slot;
+import java.util.ArrayList;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import resources.Mensaje;
 
 // Correlaciona los mensajes de sus múltiples entradas (Normalmente usando el id) y los saca al mismo tiempo por sus múltiples salidas.
@@ -10,11 +16,22 @@ public class Correlator extends Task {
 
     private List<Slot> entrada;
     private List<Slot> salida;
+    private List<XPathExpression> expresiones;
 
-    public Correlator(List<Slot> entrada, List<Slot> salida) {
+    public Correlator(List<Slot> entrada, List<Slot> salida, List<String> expresiones) {
         super();
         this.entrada = entrada;
         this.salida = salida;
+        this.expresiones = new ArrayList<>();
+        XPath xpath = XPathFactory.newInstance().newXPath();
+
+        try {
+            for (String s : expresiones) {
+                this.expresiones.add(xpath.compile(s));
+            }
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }
     }
 
     public void run() {
@@ -39,6 +56,8 @@ public class Correlator extends Task {
 
             while (iteratorB.hasNext()) {
                 Mensaje mensajeB = iteratorB.next();
+                Boolean cumpleExpresion1 = (Boolean) expresiones.get(0).evaluate(mensajeA.getContenido(), XPathConstants.BOOLEAN);
+                Boolean cumpleExpresion2 = (Boolean) expresiones.get(1).evaluate(mensajeB.getContenido(), XPathConstants.BOOLEAN);
 
                 if (mensajeA.getIdMensajeCorrelacion().equals(mensajeB.getIdMensajeCorrelacion())) {
                     // Enviar mensajes correlacionados a las salidas
